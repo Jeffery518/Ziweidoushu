@@ -1,0 +1,78 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# 天纪·紫微起盘 项目开源忽略规则
+# ──────────────────────────────────────────────────────────────────────────────
+
+# --- 敏感数据与环境配置 ---
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# --- Python 相关 ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+.coverage
+htmlcov/
+nosetests.xml
+pip-log.txt
+pip-delete-this-directory.txt
+backend/data/feedback.db
+backend/data/stats.json
+
+# --- Node.js / Next.js 相关 ---
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+build/
+.pnp
+.pnp.js
+
+# --- 日志与临时文件 ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+.DS_Store
+Thumbs.db
+tmp/
+temp/
+
+# --- IDE 与编辑器 ---
+.vscode/
+.idea/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+
+# --- Docker 相关 ---
+.docker/
+docker-compose.override.yml

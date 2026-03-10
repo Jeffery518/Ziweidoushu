@@ -1,0 +1,39 @@
+services:
+  # ── 后端 FastAPI 服务 ────────────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tianji-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"         # 仅本机访问，Nginx 反代时可改为 127.0.0.1:8000:8000
+    volumes:
+      - ./backend/data:/app/data          # 持久化反馈/统计数据
+      - ./backend/core:/app/core          # 挂载知识库，方便更新
+    environment:
+      - ADMIN_TOKEN=${ADMIN_TOKEN:-tianji-admin-2026}  # 管理员密码（建议修改）
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── 前端 Next.js 服务 ────────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # ⚠️ 使用相对路径，自适应域名和协议 (HTTP/HTTPS)
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-/api-backend}
+    container_name: tianji-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+networks:
+  default:
+    name: tianji-network
