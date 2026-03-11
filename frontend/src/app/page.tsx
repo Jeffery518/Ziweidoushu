@@ -165,7 +165,7 @@ export default function Home() {
           {chartData && (
             <div className="w-full bg-zinc-950/95 backdrop-blur-xl rounded-2xl p-6 border border-zinc-800 shadow-xl shadow-black/5 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150 fill-mode-both">
               <div className="flex flex-col gap-4 items-start relative z-10 w-full">
-                <div className="flex items-center gap-3 w-full border-b border-zinc-100 dark:border-zinc-800/60 pb-4">
+                <div className="flex items-center gap-3 w-full border-b border-zinc-800 pb-4">
                   <DynamicAvatar size="sm" src="/nishi-avatar.jpg" />
                   <div>
                     <h2 className="text-sm font-bold tracking-widest text-zinc-100 font-serif">天纪原著批断</h2>
@@ -187,7 +187,7 @@ export default function Home() {
                           <h4 className="text-zinc-100 font-bold text-[12px] font-serif">{item.star} 坐命</h4>
                         </div>
                         {/* Structured 3-section cards */}
-                        <div className="divide-y divide-zinc-100 dark:divide-zinc-800/60">
+                        <div className="divide-y divide-zinc-800">
                           <div className="flex items-start gap-2 px-4 py-2.5">
                             <TrendingUp className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" />
                             <p className="text-[11px] leading-relaxed text-zinc-200 font-serif">{item.quote}</p>
