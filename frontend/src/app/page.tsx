@@ -168,15 +168,15 @@ export default function Home() {
                 <div className="flex items-center gap-3 w-full border-b border-zinc-100 dark:border-zinc-800/60 pb-4">
                   <DynamicAvatar size="sm" src="/nishi-avatar.jpg" />
                   <div>
-                    <h2 className="text-sm font-bold tracking-widest text-zinc-900 dark:text-zinc-100 font-serif">天纪原著批断</h2>
-                    <p className="text-[10px] text-zinc-400 mt-0.5">{chartData.meta.yin_yang_gender} · {chartData.meta.wuxing_ju}</p>
+                    <h2 className="text-sm font-bold tracking-widest text-zinc-100 font-serif">天纪原著批断</h2>
+                    <p className="text-[10px] text-zinc-200 mt-0.5">{chartData.meta.yin_yang_gender} · {chartData.meta.wuxing_ju}</p>
                   </div>
                 </div>
 
-                <p className="text-[12px] leading-relaxed text-zinc-600 dark:text-zinc-300 font-serif">
-                  命主为 <strong className="text-zinc-900 dark:text-zinc-200">{chartData.meta.yin_yang_gender}</strong>，命宫落于
-                  <strong className="text-zinc-900 dark:text-zinc-200"> {chartData.meta.life_palace}</strong> 宫，统御
-                  <strong className="text-zinc-900 dark:text-zinc-200"> {chartData.meta.wuxing_ju}</strong> 命造。
+                <p className="text-[12px] leading-relaxed text-zinc-200 font-serif">
+                  命主为 <strong className="text-white">{chartData.meta.yin_yang_gender}</strong>，命宫落于
+                  <strong className="text-white"> {chartData.meta.life_palace}</strong> 宫，统御
+                  <strong className="text-white"> {chartData.meta.wuxing_ju}</strong> 命造。
                 </p>
 
                 {ragContext.length > 0 ? (
@@ -184,21 +184,21 @@ export default function Home() {
                     {ragContext.map((item, idx) => (
                       <div key={idx} className="rounded-xl border border-zinc-200/50 dark:border-zinc-800/80 overflow-hidden">
                         <div className="px-4 py-2 bg-zinc-900 border-b border-zinc-800/80">
-                          <h4 className="text-zinc-800 dark:text-zinc-200 font-bold text-[12px] font-serif">{item.star} 坐命</h4>
+                          <h4 className="text-zinc-100 font-bold text-[12px] font-serif">{item.star} 坐命</h4>
                         </div>
                         {/* Structured 3-section cards */}
                         <div className="divide-y divide-zinc-100 dark:divide-zinc-800/60">
                           <div className="flex items-start gap-2 px-4 py-2.5">
                             <TrendingUp className="w-3.5 h-3.5 text-green-500 mt-0.5 flex-shrink-0" />
-                            <p className="text-[11px] leading-relaxed text-zinc-600 dark:text-zinc-400 font-serif">{item.quote}</p>
+                            <p className="text-[11px] leading-relaxed text-zinc-200 font-serif">{item.quote}</p>
                           </div>
                           <div className="flex items-start gap-2 px-4 py-2.5">
                             <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
-                            <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400 font-serif">注意宫位四化的影响，尤其是化忌落入时须谨慎应对。</p>
+                            <p className="text-[11px] leading-relaxed text-zinc-200 font-serif">注意宫位四化的影响，尤其是化忌落入时须谨慎应对。</p>
                           </div>
                           <div className="flex items-start gap-2 px-4 py-2.5">
                             <Lightbulb className="w-3.5 h-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
-                            <p className="text-[11px] leading-relaxed text-zinc-300 font-serif">可结合大限、流年的天干四化进行综合研判。</p>
+                                                         <p className="text-[11px] leading-relaxed text-zinc-100 font-serif">可结合大限、流年的天干四化进行综合研判。</p>
                           </div>
                         </div>
                       </div>
@@ -206,7 +206,7 @@ export default function Home() {
                   </div>
                 ) : (
                   <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 border-dashed flex justify-center items-center h-20">
-                    <p className="text-[11px] text-zinc-400 font-medium">( 此命格星系暂未收录入库 )</p>
+                    <p className="text-[11px] text-zinc-200 font-medium">( 此命格星系暂未收录入库 )</p>
                   </div>
                 )}
               </div>
