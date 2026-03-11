@@ -18,7 +18,7 @@ export default function Home() {
   const [isPanelVisible, setIsPanelVisible] = useState(true);
 
   return (
-    <div className="relative w-full flex justify-center py-6 md:py-10 px-4 md:px-8 bg-transparent min-h-screen text-zinc-900 dark:text-zinc-100 overflow-hidden">
+    <div className="relative w-full flex justify-center py-6 md:py-10 px-4 md:px-8 bg-transparent min-h-screen text-zinc-100 overflow-hidden">
 
       <div className="max-w-7xl w-full flex flex-col lg:flex-row gap-6 md:gap-8 relative z-10 transition-all duration-500">
 
@@ -250,7 +250,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-primary/10 rounded-2xl scale-0 group-hover:scale-100 transition-transform duration-500" />
                   <Sparkles className="w-8 h-8 text-zinc-400 group-hover:text-primary transition-colors duration-300 relative z-10" />
                 </div>
-                <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-zinc-800 to-zinc-500 dark:from-zinc-200 dark:to-zinc-500 font-serif tracking-widest">尚未开启命轴</h3>
+                <h3 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-zinc-200 to-zinc-500 font-serif tracking-widest">尚未开启命轴</h3>
                 <p className="text-[13px] tracking-wide text-zinc-500 mt-3 max-w-sm">
                   请在此界面 {isPanelVisible ? "左侧" : "点击悬浮按钮"} 录入生辰信息后，点击引擎执行排盘。
                 </p>
@@ -272,7 +272,7 @@ export default function Home() {
 
       {/* 免责声明页脚 */}
       <footer className="absolute bottom-4 left-0 w-full text-center px-4 pointer-events-none z-20">
-        <p className="text-[10px] md:text-[11px] text-zinc-400 dark:text-zinc-600 font-medium tracking-widest uppercase">
+        <p className="text-[10px] md:text-[11px] text-zinc-400 font-medium tracking-widest uppercase">
           免责声明：本应用分析结果仅供学术研学与娱乐参考，切勿盲目迷信。重大决策请咨询专业人士。
         </p>
       </footer>
