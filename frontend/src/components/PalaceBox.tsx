@@ -42,10 +42,10 @@ const getStarColor = (star: string) => {
     const purpleStars = ["紫微", "天府", "太阴", "巨门", "文曲", "文昌", "左辅", "右弼"];
     const greenStars = ["天机", "贪狼", "擎羊", "陀罗", "天同", "七杀", "破军"];
 
-    if (redStars.some(s => star.includes(s))) return "text-red-600 dark:text-red-400";
-    if (purpleStars.some(s => star.includes(s))) return "text-purple-600 dark:text-purple-400";
-    if (greenStars.some(s => star.includes(s))) return "text-emerald-600 dark:text-emerald-500";
-    return "text-zinc-700 dark:text-zinc-300";
+    if (redStars.some(s => star.includes(s))) return "text-red-400";
+    if (purpleStars.some(s => star.includes(s))) return "text-purple-400";
+    if (greenStars.some(s => star.includes(s))) return "text-emerald-500";
+    return "text-zinc-300";
 };
 
 const getTransformationColor = (type: string) => {
@@ -81,8 +81,8 @@ export const PalaceBox = React.memo(function PalaceBox({ data, isActive, classNa
             onClick={() => onClick?.(data.branch)}
             className={cn(
                 "relative flex flex-col p-1.5 md:p-2 aspect-square transition-all duration-200 cursor-pointer overflow-hidden",
-                "bg-white dark:bg-[#121212] hover:bg-zinc-50 dark:hover:bg-[#181818]",
-                isActive ? "ring-2 ring-primary border-primary shadow-sm" : "border border-zinc-200 dark:border-zinc-800",
+                "bg-[#121212] hover:bg-[#181818]",
+                isActive ? "ring-2 ring-primary border-primary shadow-sm" : "border border-zinc-800",
                 className
             )}
         >
@@ -111,12 +111,12 @@ export const PalaceBox = React.memo(function PalaceBox({ data, isActive, classNa
                                         </span>
                                     )}
                                     {(displayOptions?.showBoshiSpirit !== false && brightness) && (
-                                        <span className="text-[8px] md:text-[10px] bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 font-bold px-0.5 rounded shadow-sm leading-none whitespace-nowrap mt-[1px]">
+                                        <span className="text-[8px] md:text-[10px] bg-zinc-800 text-zinc-400 font-bold px-0.5 rounded shadow-sm leading-none whitespace-nowrap mt-[1px]">
                                             {brightness}
                                         </span>
                                     )}
                                     {(!brightness && cleanStarName.length > 2) && (
-                                        <span className="text-[9px] md:text-[10px] text-zinc-400 dark:text-zinc-500 font-medium font-serif leading-none whitespace-nowrap">
+                                        <span className="text-[9px] md:text-[10px] text-zinc-500 font-medium font-serif leading-none whitespace-nowrap">
                                             {cleanStarName.slice(2)}
                                         </span>
                                     )}
@@ -129,34 +129,34 @@ export const PalaceBox = React.memo(function PalaceBox({ data, isActive, classNa
 
             {/* Middle: DaYun limits and xian */}
             <div className="flex-1 flex flex-col justify-center items-center w-full min-h-0 relative z-0 mt-2 mb-2">
-                <div className="flex gap-2 text-[8px] md:text-[9px] text-zinc-400 dark:text-zinc-500 whitespace-nowrap opacity-80 scale-90 md:scale-100">
+                <div className="flex gap-2 text-[8px] md:text-[9px] text-zinc-500 whitespace-nowrap opacity-80 scale-90 md:scale-100">
                     {displayOptions?.showLiuNian !== false && data.flow_years && <span>流年: {data.flow_years}</span>}
                     {displayOptions?.showLiuNian !== false && data.small_limits && <span>小限: {data.small_limits}</span>}
                     {displayOptions?.showXiaoXian !== false && data.xiao_xian && (
-                        <span className="text-amber-500 dark:text-amber-400 font-bold">{data.xiao_xian}</span>
+                        <span className="text-amber-400 font-bold">{data.xiao_xian}</span>
                     )}
                 </div>
                 {displayOptions?.showDaYun !== false && data.age_range && (
-                    <div className="text-[10px] md:text-[13px] font-semibold text-zinc-700 dark:text-zinc-300 mt-0.5 tracking-wider">
+                    <div className="text-[10px] md:text-[13px] font-semibold text-zinc-300 mt-0.5 tracking-wider">
                         {data.age_range}
                     </div>
                 )}
             </div>
 
             {/* Bottom: ShenSha/DaYun, Names, Stem, Branch */}
-            <div className="w-full mt-auto flex justify-between items-end relative z-10 pt-1 border-t border-zinc-100 dark:border-zinc-800/60">
+            <div className="w-full mt-auto flex justify-between items-end relative z-10 pt-1 border-t border-zinc-800/60">
                 {/* Bottom Left: ShenSha & DaYun + Spirits */}
                 <div className="flex flex-col items-start leading-none gap-[3px]">
                     {displayOptions?.showMinorStars !== false && data.shen_sha && data.shen_sha.map((ss, idx) => (
-                        <span key={idx} className="text-[8px] md:text-[10px] text-emerald-600/80 dark:text-emerald-500/80 font-serif">{ss}</span>
+                        <span key={idx} className="text-[8px] md:text-[10px] text-emerald-500/80 font-serif">{ss}</span>
                     ))}
                     {displayOptions?.showDaYun !== false && data.dayun && (
-                        <span className="text-[9px] md:text-[11px] font-bold text-rose-600 dark:text-rose-400 font-sans tracking-tighter bg-rose-50 dark:bg-rose-950/30 px-1 py-0.5 rounded-sm border border-rose-100 dark:border-rose-900/50">
+                        <span className="text-[9px] md:text-[11px] font-bold text-rose-400 font-sans tracking-tighter bg-rose-950/30 px-1 py-0.5 rounded-sm border border-rose-900/50">
                             {data.dayun}
                         </span>
                     )}
                     {displayOptions?.showSuiqianSpirit !== false && data.suiqian_spirit && (
-                        <span className="text-[8px] md:text-[10px] font-bold text-sky-600 dark:text-sky-400 font-serif">
+                        <span className="text-[8px] md:text-[10px] font-bold text-sky-400 font-serif">
                             {data.suiqian_spirit}
                         </span>
                     )}
@@ -166,18 +166,18 @@ export const PalaceBox = React.memo(function PalaceBox({ data, isActive, classNa
                 <div className="flex flex-col items-end leading-none gap-[2px]">
                     <div className="flex gap-1 items-end mb-0.5">
                         {displayOptions?.showBoshiSpirit !== false && data.boshi_spirit && (
-                            <span className="text-[9px] md:text-[11px] font-bold text-indigo-600/80 dark:text-indigo-400/80 font-serif mr-1">
+                            <span className="text-[9px] md:text-[11px] font-bold text-indigo-400/80 font-serif mr-1">
                                 {data.boshi_spirit}
                             </span>
                         )}
                         <span className={cn(
                             "px-1 py-[1.5px] rounded-sm text-[9px] md:text-[11px] font-bold font-serif whitespace-nowrap box-border shadow-sm",
-                            data.name === "命宫" ? "bg-red-600 text-white" : "bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300"
+                            data.name === "命宫" ? "bg-red-600 text-white" : "bg-zinc-800 text-zinc-300"
                         )}>
                             {data.name}
                         </span>
                     </div>
-                    <span className="text-[11px] md:text-[14px] font-bold font-serif text-zinc-800 dark:text-zinc-200 mt-0.5 tracking-widest">
+                    <span className="text-[11px] md:text-[14px] font-bold font-serif text-zinc-200 mt-0.5 tracking-widest">
                         {data.stem}{data.branch}
                     </span>
                 </div>

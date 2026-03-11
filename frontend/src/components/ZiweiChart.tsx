@@ -78,7 +78,7 @@ export function ZiweiChart({ chartData, isLoading }: { chartData: ZiweiChartData
 
     if (isLoading) {
         return (
-            <div className="w-full max-w-4xl aspect-[4/3] sm:aspect-square flex items-center justify-center relative bg-white dark:bg-zinc-950 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm">
+            <div className="w-full max-w-4xl aspect-[4/3] sm:aspect-square flex items-center justify-center relative bg-zinc-950 rounded-lg border border-zinc-800 shadow-sm">
                 <div className="animate-pulse flex flex-col items-center">
                     <div className="w-10 h-10 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
                     <p className="mt-4 text-zinc-500 tracking-widest text-sm font-medium">排盘演算中...</p>
@@ -146,30 +146,30 @@ export function ZiweiChart({ chartData, isLoading }: { chartData: ZiweiChartData
                     onYearChange={setSelectedYear}
                 />
                 
-                <div className="flex flex-wrap items-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl p-2 shadow-sm gap-2">
+                <div className="flex flex-wrap items-center bg-zinc-900 border border-zinc-800 rounded-xl p-2 shadow-sm gap-2">
                     <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showDaYun} onChange={(e) => setDisplayOptions(prev => ({...prev, showDaYun: e.target.checked}))} />
-                        <span className="text-zinc-700 dark:text-zinc-300 text-xs font-bold font-serif select-none">大运</span>
+                        <span className="text-zinc-300 text-xs font-bold font-serif select-none">大运</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showLiuNian} onChange={(e) => setDisplayOptions(prev => ({...prev, showLiuNian: e.target.checked}))} />
-                        <span className="text-zinc-700 dark:text-zinc-300 text-xs font-bold font-serif select-none">流年</span>
+                        <span className="text-zinc-300 text-xs font-bold font-serif select-none">流年</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showMinorStars} onChange={(e) => setDisplayOptions(prev => ({...prev, showMinorStars: e.target.checked}))} />
-                        <span className="text-zinc-700 dark:text-zinc-300 text-xs font-bold font-serif select-none">辅星神煞</span>
+                        <span className="text-zinc-300 text-xs font-bold font-serif select-none">辅星神煞</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showBoshiSpirit} onChange={(e) => setDisplayOptions(prev => ({...prev, showBoshiSpirit: e.target.checked}))} />
-                        <span className="text-zinc-700 dark:text-zinc-300 text-xs font-bold font-serif select-none">博士十二神</span>
+                        <span className="text-zinc-300 text-xs font-bold font-serif select-none">博士十二神</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showSuiqianSpirit} onChange={(e) => setDisplayOptions(prev => ({...prev, showSuiqianSpirit: e.target.checked}))} />
-                        <span className="text-zinc-700 dark:text-zinc-300 text-xs font-bold font-serif select-none">岁前十二神</span>
+                        <span className="text-zinc-300 text-xs font-bold font-serif select-none">岁前十二神</span>
                     </label>
                     <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
                         <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showXiaoXian} onChange={(e) => setDisplayOptions(prev => ({...prev, showXiaoXian: e.target.checked}))} />
-                        <span className="text-zinc-700 dark:text-zinc-300 text-xs font-bold font-serif select-none">小限</span>
+                        <span className="text-zinc-300 text-xs font-bold font-serif select-none">小限</span>
                     </label>
                 </div>
                 {/* 分享按钮 */}
@@ -210,7 +210,7 @@ export function ZiweiChart({ chartData, isLoading }: { chartData: ZiweiChartData
                 </button>
             </div>
 
-            <div id="ziwei-chart-capture" className="grid grid-cols-4 grid-rows-4 gap-[1px] p-[1px] rounded flex-shrink-0 bg-zinc-300 dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-800 overflow-hidden shadow-2xl">
+            <div id="ziwei-chart-capture" className="grid grid-cols-4 grid-rows-4 gap-[1px] p-[1px] rounded flex-shrink-0 bg-zinc-800 border border-zinc-800 overflow-hidden shadow-2xl">
 
                 {chartData.palaces.map((palace, i) => {
                     const isDaYun = palace.dayun ? (
@@ -272,30 +272,30 @@ export function ZiweiChart({ chartData, isLoading }: { chartData: ZiweiChartData
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.5, duration: 0.4 }}
-                    className="col-start-2 col-end-4 row-start-2 row-end-4 flex flex-col items-center justify-center p-4 md:p-8 bg-white dark:bg-[#121212] relative overflow-hidden"
+                    className="col-start-2 col-end-4 row-start-2 row-end-4 flex flex-col items-center justify-center p-4 md:p-8 bg-[#121212] relative overflow-hidden"
                 >
                     <div className="relative z-10 text-center space-y-4 md:space-y-6 w-full">
-                        <h2 className="text-xl md:text-3xl font-bold tracking-[0.2em] text-zinc-800 dark:text-zinc-100 font-serif">
+                        <h2 className="text-xl md:text-3xl font-bold tracking-[0.2em] text-zinc-100 font-serif">
                             文墨天纪
                         </h2>
 
                         <div className="flex flex-col gap-2 mx-auto w-3/4 max-w-xs text-sm md:text-[15px] font-serif">
                             <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
                                 <span className="text-zinc-500">基本命局</span>
-                                <span className="text-zinc-800 dark:text-zinc-200 font-bold">{chartData.meta.wuxing_ju}</span>
+                                <span className="text-zinc-200 font-bold">{chartData.meta.wuxing_ju}</span>
                             </div>
                             <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
                                 <span className="text-zinc-500">命造阴阳</span>
-                                <span className="text-zinc-800 dark:text-zinc-200 font-bold">{chartData.meta.yin_yang_gender || "未知"}</span>
+                                <span className="text-zinc-200 font-bold">{chartData.meta.yin_yang_gender || "未知"}</span>
                             </div>
                             <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
                                 <span className="text-zinc-500">命宫位置</span>
-                                <span className="text-zinc-800 dark:text-zinc-200 font-bold">{chartData.meta.life_palace}</span>
+                                <span className="text-zinc-200 font-bold">{chartData.meta.life_palace}</span>
                             </div>
                             {chartData.meta.shen_gong && (
                                 <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
                                     <span className="text-zinc-500">身宫位置</span>
-                                    <span className="text-amber-600 dark:text-amber-400 font-bold">{chartData.meta.shen_gong} ({chartData.meta.shen_gong_palace})</span>
+                                    <span className="text-amber-400 font-bold">{chartData.meta.shen_gong} ({chartData.meta.shen_gong_palace})</span>
                                 </div>
                             )}
                             <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
@@ -318,18 +318,18 @@ export function ZiweiChart({ chartData, isLoading }: { chartData: ZiweiChartData
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className={cn(
                     "w-full rounded-3xl p-6 md:p-8 backdrop-blur-2xl border shadow-2xl",
-                    "bg-white/80 dark:bg-[#121212]/80 border-white/40 dark:border-white/5 flex flex-col gap-6",
+                    "bg-[#121212]/80 border-white/5 flex flex-col gap-6",
                     "shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.4)]"
                 )}
             >
                 {/* 头部标题区 */}
                 <div className="border-b border-zinc-200 dark:border-white/10 pb-5">
-                    <h3 className="text-xl md:text-2xl font-bold tracking-wider text-zinc-900 dark:text-zinc-100 flex items-center gap-3">
+                    <h3 className="text-xl md:text-2xl font-bold tracking-wider text-zinc-100 flex items-center gap-3">
                         <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500">
                             {selectedPalace ? `${selectedPalace.name}解析` : "全局概览"}
                         </span>
                         {selectedPalace && (
-                            <span className="text-xs font-medium tracking-widest text-zinc-500 bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 px-2.5 py-1 rounded-md">
+                            <span className="text-xs font-medium tracking-widest text-zinc-500 bg-white/5 border border-white/10 px-2.5 py-1 rounded-md">
                                 {selectedPalace.stem}{selectedPalace.branch}宫
                             </span>
                         )}
@@ -352,27 +352,27 @@ export function ZiweiChart({ chartData, isLoading }: { chartData: ZiweiChartData
                                 transition={{ delay: idx * 0.08, duration: 0.4 }}
                                 className={cn(
                                     "p-6 rounded-2xl border backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl group",
-                                    item.level === "destructive" ? "bg-rose-50/70 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/50" :
-                                        item.level === "warning" ? "bg-amber-50/70 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900/50" :
-                                            item.level === "success" ? "bg-emerald-50/70 dark:bg-emerald-950/20 border-emerald-200 dark:border-emerald-900/50" :
-                                                "bg-zinc-50/70 dark:bg-zinc-900/40 border-zinc-200 dark:border-zinc-800"
+                                    item.level === "destructive" ? "bg-rose-950/20 border-rose-900/50" :
+                                        item.level === "warning" ? "bg-amber-950/20 border-amber-900/50" :
+                                            item.level === "success" ? "bg-emerald-950/20 border-emerald-900/50" :
+                                                "bg-zinc-900/40 border-zinc-800"
                                 )}
                             >
                                 <div className="flex justify-between items-start mb-4">
-                                    <h4 className="text-lg font-bold text-zinc-800 dark:text-zinc-100 tracking-wide font-serif">
+                                    <h4 className="text-lg font-bold text-zinc-100 tracking-wide font-serif">
                                         {item.title}
                                     </h4>
                                     <span className={cn(
                                         "px-2.5 py-1 text-[10px] md:text-xs font-bold rounded-md font-sans tracking-wider uppercase transition-colors",
-                                        item.type === "transformation" ? "bg-purple-100 text-purple-700 dark:bg-purple-900/40 dark:text-purple-300" :
-                                            item.type === "pattern" ? "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300" :
-                                                item.type === "warning" ? "bg-rose-100 text-rose-700 dark:bg-rose-900/40 dark:text-rose-300" :
-                                                    "bg-zinc-200 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300 group-hover:bg-zinc-300 dark:group-hover:bg-zinc-700"
+                                        item.type === "transformation" ? "bg-purple-900/40 text-purple-300" :
+                                            item.type === "pattern" ? "bg-blue-900/40 text-blue-300" :
+                                                item.type === "warning" ? "bg-rose-900/40 text-rose-300" :
+                                                    "bg-zinc-800 text-zinc-300 group-hover:bg-zinc-700"
                                     )}>
                                         {item.type === "star" ? "星曜" : item.type === "pattern" ? "格局" : item.type === "transformation" ? "四化" : "提示"}
                                     </span>
                                 </div>
-                                <p className="text-[14px] md:text-[15px] leading-7 text-zinc-600 dark:text-zinc-400 font-serif whitespace-pre-line text-justify">
+                                <p className="text-[14px] md:text-[15px] leading-7 text-zinc-400 font-serif whitespace-pre-line text-justify">
                                     {item.content}
                                 </p>
                             </motion.div>

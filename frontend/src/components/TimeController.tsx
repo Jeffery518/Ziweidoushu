@@ -41,7 +41,7 @@ export function TimeController({ startYear, currentYear, onYearChange, className
             animate={{ opacity: 1, y: 0 }}
             className={cn(
                 "w-full flex flex-col items-start gap-4 md:gap-6 rounded-2xl p-4 md:p-6 backdrop-blur-2xl border shadow-lg",
-                "bg-white/80 dark:bg-[#121212]/80 border-white/40 dark:border-white/5",
+                "bg-[#121212]/80 border-white/5",
                 className
             )}
         >
@@ -64,7 +64,7 @@ export function TimeController({ startYear, currentYear, onYearChange, className
                     <div className="flex justify-between items-center px-1">
                         <button
                             onClick={() => handleIncrement(-10)}
-                            className="text-xs text-zinc-500 hover:text-primary transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 px-2 py-1 rounded"
+                            className="text-xs text-zinc-400 hover:text-primary transition-colors hover:bg-zinc-800 px-2 py-1 rounded"
                         >
                             -10年 (上大运)
                         </button>
@@ -82,7 +82,7 @@ export function TimeController({ startYear, currentYear, onYearChange, className
                         )}
                         <button
                             onClick={() => handleIncrement(10)}
-                            className="text-xs text-zinc-500 hover:text-primary transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-800 px-2 py-1 rounded"
+                            className="text-xs text-zinc-400 hover:text-primary transition-colors hover:bg-zinc-800 px-2 py-1 rounded"
                         >
                             +10年 (下大运)
                         </button>
@@ -91,7 +91,7 @@ export function TimeController({ startYear, currentYear, onYearChange, className
                     <div className="relative flex items-center w-full h-8">
                         <button
                             onClick={() => handleIncrement(-1)}
-                            className="absolute left-0 w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 transition-colors z-10"
+                            className="absolute left-0 w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors z-10"
                         >
                             -
                         </button>
@@ -102,12 +102,12 @@ export function TimeController({ startYear, currentYear, onYearChange, className
                             max={startYear + 100}
                             value={localYear}
                             onChange={handleSliderChange}
-                            className="w-full h-2 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-primary px-10"
+                            className="w-full h-2 bg-zinc-800 rounded-lg appearance-none cursor-pointer accent-primary px-10"
                         />
 
                         <button
                             onClick={() => handleIncrement(1)}
-                            className="absolute right-0 w-8 h-8 flex items-center justify-center rounded-full bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-600 dark:text-zinc-300 transition-colors z-10"
+                            className="absolute right-0 w-8 h-8 flex items-center justify-center rounded-full bg-zinc-800 hover:bg-zinc-700 text-zinc-300 transition-colors z-10"
                         >
                             +
                         </button>
@@ -126,7 +126,7 @@ export function TimeController({ startYear, currentYear, onYearChange, className
                             "flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full transition-colors border",
                             showInfo
                                 ? "bg-primary/10 text-primary border-primary/20"
-                                : "bg-zinc-100 dark:bg-zinc-800/50 text-zinc-500 border-zinc-200 dark:border-zinc-800 hover:text-zinc-800 dark:hover:text-zinc-200"
+                                : "bg-zinc-800/50 text-zinc-400 border-zinc-800 hover:text-zinc-200"
                         )}
                     >
                         <Info className="w-3.5 h-3.5" />
@@ -144,17 +144,17 @@ export function TimeController({ startYear, currentYear, onYearChange, className
                         exit={{ height: 0, opacity: 0 }}
                         className="w-full overflow-hidden"
                     >
-                        <div className="mt-2 p-4 md:p-5 bg-zinc-50 dark:bg-[#181818] rounded-xl border border-zinc-200 dark:border-zinc-800/60 text-[13px] md:text-[14px] leading-relaxed text-zinc-600 dark:text-zinc-400 space-y-4 font-serif">
+                        <div className="mt-2 p-4 md:p-5 bg-[#181818] rounded-xl border border-zinc-800/60 text-[13px] md:text-[14px] leading-relaxed text-zinc-400 space-y-4 font-serif">
                             <p>
-                                <strong className="text-zinc-800 dark:text-zinc-200">1. 本命盘（底层基底）：</strong>
+                                <strong className="text-zinc-200">1. 本命盘（底层基底）：</strong>
                                 先天格局与天赋底座，静态盘面，决定了一生宏观的财富、事业、性格基调与天花板。
                             </p>
                             <p>
-                                <strong className="text-zinc-800 dark:text-zinc-200">2. 大运（十年一变）：</strong>
+                                <strong className="text-zinc-200">2. 大运（十年一变）：</strong>
                                 每十年变换一次重心（图中带有<span className="text-rose-500 font-sans mx-1">红色虚线框</span>标识）。大运好比人生的“气候”或“副本环境”，决定了这十年内的综合运势起伏和主要人生课题。
                             </p>
                             <p>
-                                <strong className="text-zinc-800 dark:text-zinc-200">3. 流年（一年一变）：</strong>
+                                <strong className="text-zinc-200">3. 流年（一年一变）：</strong>
                                 当前滑动年份的具体落脚点（图中带有<span className="text-emerald-500 font-sans mx-1">绿色发光框</span>标识）。系统会自动结算此年的临时引动（新增流年四化飞星，带闪烁），精确推演具体在哪一年触发大运潜伏的吉凶事件。
                             </p>
                         </div>
