@@ -4,13 +4,13 @@ import React from "react";
 import { motion } from "framer-motion";
 
 export function StarField() {
-  const stars = Array.from({ length: 120 }).map((_, i) => ({
+  const stars = Array.from({ length: 300 }).map((_, i) => ({
     id: i,
     top: `${Math.random() * 100}%`,
     left: `${Math.random() * 100}%`,
-    size: Math.random() * 1.5 + 0.5,
-    opacity: Math.random() * 0.5 + 0.2,
-    duration: Math.random() * 4 + 3,
+    size: Math.random() * 2 + 0.8,
+    opacity: Math.random() * 0.6 + 0.3,
+    duration: Math.random() * 5 + 3,
     delay: Math.random() * 5,
   }));
 
