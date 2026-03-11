@@ -4,89 +4,99 @@ import React from "react";
 import { motion } from "framer-motion";
 
 export function StarField() {
-  const stars = Array.from({ length: 300 }).map((_, i) => ({
-    id: i,
-    top: `${Math.random() * 100}%`,
-    left: `${Math.random() * 100}%`,
-    size: Math.random() * 2 + 0.8,
-    opacity: Math.random() * 0.6 + 0.3,
-    duration: Math.random() * 5 + 3,
-    delay: Math.random() * 5,
-  }));
+  // Create three layers of stars for a sense of depth and rotation
+  const layers = [
+    { count: 150, speed: 120, size: 1, opacity: 0.6 },
+    { count: 100, speed: 180, size: 1.5, opacity: 0.4 },
+    { count: 50, speed: 240, size: 2.5, opacity: 0.3 },
+  ];
 
   const orbits = [
-    { size: 300, duration: 40, delay: 0, color: "rgba(59, 130, 246, 0.08)" },
-    { size: 500, duration: 60, delay: -10, color: "rgba(139, 92, 246, 0.05)" },
-    { size: 750, duration: 90, delay: -20, color: "rgba(236, 72, 153, 0.03)" },
+    { size: 280, duration: 25, color: "rgba(59, 130, 246, 0.15)", planetColor: "#60a5fa" },
+    { size: 450, duration: 45, color: "rgba(139, 92, 246, 0.1)", planetColor: "#a855f7" },
+    { size: 650, duration: 75, color: "rgba(236, 72, 153, 0.08)", planetColor: "#ec4899" },
+    { size: 900, duration: 110, color: "rgba(20, 184, 166, 0.05)", planetColor: "#14b8a6" },
   ];
 
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#050505]">
-      {/* Base deep space gradient */}
-      <div className="absolute inset-0 bg-radial-gradient from-indigo-900/10 via-zinc-950 to-black" />
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020203]">
+      {/* Deep Space Background */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black" />
 
-      {/* Central Star (Sun) Effect */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1 h-1">
-        {/* Core glow */}
-        <div className="absolute inset-0 w-64 h-64 -translate-x-1/2 -translate-y-1/2 bg-amber-500/10 rounded-full blur-[80px] animate-pulse" />
-        <div className="absolute inset-0 w-32 h-32 -translate-x-1/2 -translate-y-1/2 bg-orange-500/5 rounded-full blur-[40px] animate-pulse" />
-      </div>
-      
-      {/* Planetary Orbits */}
+      {/* Galaxy Rotation Layers */}
+      {layers.map((layer, index) => (
+        <motion.div
+          key={`layer-${index}`}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vw]"
+          animate={{ rotate: 360 }}
+          transition={{
+            duration: layer.speed,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+        >
+          {Array.from({ length: layer.count }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full bg-white shadow-[0_0_8px_white]"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+                width: layer.size,
+                height: layer.size,
+                opacity: layer.opacity,
+              }}
+            />
+          ))}
+        </motion.div>
+      ))}
+
+      {/* Central Solar System Container */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
+        
+        {/* The Sun - Central Energy Source */}
+        <div className="relative">
+          <div className="absolute inset-0 w-8 md:w-12 h-8 md:h-12 -translate-x-1/2 -translate-y-1/2 bg-amber-400 rounded-full shadow-[0_0_60px_#f59e0b] z-30" />
+          <div className="absolute inset-0 w-24 md:w-32 h-24 md:h-32 -translate-x-1/2 -translate-y-1/2 bg-amber-500/20 rounded-full blur-2xl animate-pulse z-20" />
+          <div className="absolute inset-0 w-48 md:w-64 h-48 md:h-64 -translate-x-1/2 -translate-y-1/2 bg-orange-600/10 rounded-full blur-[80px] z-10" />
+        </div>
+
+        {/* Orbits and Revolving Planets */}
         {orbits.map((orbit, i) => (
           <motion.div
-            key={i}
-            className="absolute rounded-full border border-dashed"
+            key={`orbit-${i}`}
+            className="absolute rounded-full border border-zinc-100/10"
             style={{
               width: orbit.size,
               height: orbit.size,
-              borderColor: orbit.color,
             }}
             animate={{ rotate: 360 }}
             transition={{
               duration: orbit.duration,
               repeat: Infinity,
               ease: "linear",
-              delay: orbit.delay,
             }}
           >
-            {/* A small "planet" or "node" on the orbit */}
+            {/* The Orbit Path Visual */}
+            <div className="absolute inset-0 rounded-full border border-dashed" style={{ borderColor: orbit.color }} />
+            
+            {/* The Planet */}
             <div 
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-zinc-400/30 shadow-[0_0_8px_rgba(255,255,255,0.2)]"
-            />
+              className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full shadow-[0_0_15px_currentColor]"
+              style={{ 
+                backgroundColor: orbit.planetColor,
+                color: orbit.planetColor
+              }}
+            >
+              {/* Subtle planet glow */}
+              <div className="absolute inset-0 w-full h-full rounded-full bg-inherit blur-sm animate-pulse" />
+            </div>
           </motion.div>
         ))}
       </div>
 
-      {/* Stars */}
-      {stars.map((star) => (
-        <motion.div
-          key={star.id}
-          className="absolute rounded-full bg-white"
-          style={{
-            top: star.top,
-            left: star.left,
-            width: star.size,
-            height: star.size,
-            opacity: star.opacity,
-            boxShadow: star.size > 1 ? "0 0 4px rgba(255,255,255,0.4)" : "none",
-          }}
-          animate={{
-            opacity: [star.opacity, 0.2, star.opacity],
-          }}
-          transition={{
-            duration: star.duration,
-            repeat: Infinity,
-            delay: star.delay,
-            ease: "easeInOut",
-          }}
-        />
-      ))}
-
-      {/* Distant nebulae flares */}
-      <div className="absolute top-1/4 -left-1/4 w-[80%] h-[80%] bg-blue-900/5 rounded-full blur-[160px] pointer-events-none" />
-      <div className="absolute bottom-1/4 -right-1/4 w-[60%] h-[60%] bg-purple-900/5 rounded-full blur-[140px] pointer-events-none" />
+      {/* Distant Galactic Nebula Dust */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(30,58,138,0.05)_50%,_transparent_100%)] pointer-events-none" />
     </div>
   );
 }
