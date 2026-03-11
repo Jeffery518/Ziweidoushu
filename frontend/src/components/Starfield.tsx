@@ -1,102 +1,55 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 
 export function StarField() {
-  // Create three layers of stars for a sense of depth and rotation
-  const layers = [
-    { count: 150, speed: 120, size: 1, opacity: 0.6 },
-    { count: 100, speed: 180, size: 1.5, opacity: 0.4 },
-    { count: 50, speed: 240, size: 2.5, opacity: 0.3 },
-  ];
-
-  const orbits = [
-    { size: 280, duration: 25, color: "rgba(59, 130, 246, 0.15)", planetColor: "#60a5fa" },
-    { size: 450, duration: 45, color: "rgba(139, 92, 246, 0.1)", planetColor: "#a855f7" },
-    { size: 650, duration: 75, color: "rgba(236, 72, 153, 0.08)", planetColor: "#ec4899" },
-    { size: 900, duration: 110, color: "rgba(20, 184, 166, 0.05)", planetColor: "#14b8a6" },
-  ];
-
   return (
-    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020203]">
-      {/* Deep Space Background */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-900/10 via-black to-black" />
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#020205]">
+      {/* 
+        Professional Deep Space Background 
+        Using layered gradients is the most memory-efficient way to create depth without GPU artifacts.
+      */}
+      
+      {/* 1. Base Deep Gradient */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_#0a0a14_0%,_#020205_100%)]" />
+      
+      {/* 2. Soft Nebula Flares - Fixed positions, no animation to save memory */}
+      <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-blue-900/10 rounded-full blur-[120px]" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-900/10 rounded-full blur-[100px]" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-indigo-950/5 rounded-full blur-[150px]" />
 
-      {/* Galaxy Rotation Layers */}
-      {layers.map((layer, index) => (
-        <motion.div
-          key={`layer-${index}`}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vw]"
-          animate={{ rotate: 360 }}
-          transition={{
-            duration: layer.speed,
-            repeat: Infinity,
-            ease: "linear",
-          }}
-        >
-          {Array.from({ length: layer.count }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute rounded-full bg-white shadow-[0_0_8px_white]"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: layer.size,
-                height: layer.size,
-                opacity: layer.opacity,
-              }}
-            />
-          ))}
-        </motion.div>
-      ))}
+      {/* 3. Static Star Field Pattern - High performance repeated background */}
+      <div className="absolute inset-0 opacity-30" style={{
+        backgroundImage: `
+          radial-gradient(1px 1px at 25px 35px, #fff, transparent),
+          radial-gradient(1.5px 1.5px at 150px 120px, #fff, transparent),
+          radial-gradient(1px 1px at 280px 70px, #fff, transparent),
+          radial-gradient(2px 2px at 400px 250px, #fff, transparent),
+          radial-gradient(1px 1px at 550px 180px, #fff, transparent),
+          radial-gradient(1.2px 1.2px at 700px 320px, #fff, transparent)
+        `,
+        backgroundSize: '800px 600px',
+        backgroundRepeat: 'repeat'
+      }} />
 
-      {/* Central Solar System Container */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full flex items-center justify-center">
+      {/* 4. Central Cosmic Center (Solar System vibe) - Elegant and static */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+        {/* Subdued Sun Core */}
+        <div className="w-12 h-12 bg-amber-500/10 rounded-full blur-2xl" />
+        <div className="absolute w-4 h-4 bg-amber-200/20 rounded-full blur-md" />
         
-        {/* The Sun - Central Energy Source */}
-        <div className="relative">
-          <div className="absolute inset-0 w-8 md:w-12 h-8 md:h-12 -translate-x-1/2 -translate-y-1/2 bg-amber-400 rounded-full shadow-[0_0_60px_#f59e0b] z-30" />
-          <div className="absolute inset-0 w-24 md:w-32 h-24 md:h-32 -translate-x-1/2 -translate-y-1/2 bg-amber-500/20 rounded-full blur-2xl animate-pulse z-20" />
-          <div className="absolute inset-0 w-48 md:w-64 h-48 md:h-64 -translate-x-1/2 -translate-y-1/2 bg-orange-600/10 rounded-full blur-[80px] z-10" />
-        </div>
-
-        {/* Orbits and Revolving Planets */}
-        {orbits.map((orbit, i) => (
-          <motion.div
-            key={`orbit-${i}`}
-            className="absolute rounded-full border border-zinc-100/10"
-            style={{
-              width: orbit.size,
-              height: orbit.size,
-            }}
-            animate={{ rotate: 360 }}
-            transition={{
-              duration: orbit.duration,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-          >
-            {/* The Orbit Path Visual */}
-            <div className="absolute inset-0 rounded-full border border-dashed" style={{ borderColor: orbit.color }} />
-            
-            {/* The Planet */}
-            <div 
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full shadow-[0_0_15px_currentColor]"
-              style={{ 
-                backgroundColor: orbit.planetColor,
-                color: orbit.planetColor
-              }}
-            >
-              {/* Subtle planet glow */}
-              <div className="absolute inset-0 w-full h-full rounded-full bg-inherit blur-sm animate-pulse" />
-            </div>
-          </motion.div>
-        ))}
+        {/* Subtle Orbit Rings - Very thin for professional look */}
+        <div className="absolute w-[320px] h-[320px] rounded-full border border-white/[0.03]" />
+        <div className="absolute w-[550px] h-[550px] rounded-full border border-white/[0.02]" />
+        <div className="absolute w-[850px] h-[850px] rounded-full border border-white/[0.01]" />
+        
+        {/* Fixed 'Planets' as accents */}
+        <div className="absolute top-[-160px] left-0 w-1.5 h-1.5 rounded-full bg-blue-400/20 shadow-[0_0_8px_rgba(96,165,250,0.2)]" />
+        <div className="absolute bottom-[-275px] right-[-100px] w-2 h-2 rounded-full bg-purple-400/20 shadow-[0_0_10px_rgba(168,85,247,0.2)]" />
       </div>
 
-      {/* Distant Galactic Nebula Dust */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] bg-[radial-gradient(circle_at_center,_transparent_0%,_rgba(30,58,138,0.05)_50%,_transparent_100%)] pointer-events-none" />
+      {/* 5. Vignette for focus */}
+      <div className="absolute inset-0 shadow-[inset_0_0_150px_rgba(0,0,0,0.8)]" />
     </div>
   );
 }
