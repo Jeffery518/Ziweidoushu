@@ -134,7 +134,7 @@ export default function Home() {
               <button
                 onClick={handleGenerate}
                 disabled={isLoading}
-                className="w-full relative mt-6 inline-flex items-center justify-center overflow-hidden text-sm font-medium rounded-xl group bg-zinc-900 text-zinc-100 hover:bg-zinc-800 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 border border-transparent dark:border-zinc-700/50 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
+                className="w-full relative mt-6 inline-flex items-center justify-center overflow-hidden text-sm font-medium rounded-xl group bg-blue-600 text-white hover:bg-blue-500 transition-all duration-300 shadow-lg shadow-blue-900/20 hover:shadow-blue-500/40 hover:-translate-y-0.5 disabled:opacity-70"
               >
                 <span className="relative w-full px-5 py-3.5 flex items-center justify-center gap-2">
                   {isLoading ? (
