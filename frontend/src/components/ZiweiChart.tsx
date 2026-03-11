@@ -138,76 +138,80 @@ export function ZiweiChart({ chartData, isLoading }: { chartData: ZiweiChartData
     return (
         <div className="w-full max-w-6xl mx-auto p-2 md:p-6 flex flex-col gap-6 md:gap-8">
 
-            {/* Time Controller & Display Settings */}
-            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-4 w-full">
+            {/* Time Controller - Strong Full Width presence */}
+            <div className="w-full">
                 <TimeController
-                    startYear={pseudoBirthYear} // we will want to read real birth year eventually
+                    startYear={pseudoBirthYear}
                     currentYear={selectedYear}
                     onYearChange={setSelectedYear}
                 />
-                
-                <div className="flex flex-wrap items-center bg-zinc-900 border border-zinc-800 rounded-xl p-2 shadow-sm gap-2">
-                    <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showDaYun} onChange={(e) => setDisplayOptions(prev => ({...prev, showDaYun: e.target.checked}))} />
+            </div>
+            
+            {/* Display Settings & Action Buttons */}
+            <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 w-full px-2">
+                <div className="flex flex-wrap items-center bg-zinc-900/80 backdrop-blur-md border border-zinc-800 rounded-2xl p-2 shadow-xl gap-1">
+                    <label className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-xl hover:bg-zinc-800 transition-colors">
+                        <input type="checkbox" className="w-4 h-4 accent-primary rounded cursor-pointer" checked={displayOptions.showDaYun} onChange={(e) => setDisplayOptions(prev => ({...prev, showDaYun: e.target.checked}))} />
                         <span className="text-zinc-300 text-xs font-bold font-serif select-none">大运</span>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showLiuNian} onChange={(e) => setDisplayOptions(prev => ({...prev, showLiuNian: e.target.checked}))} />
+                    <label className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-xl hover:bg-zinc-800 transition-colors">
+                        <input type="checkbox" className="w-4 h-4 accent-primary rounded cursor-pointer" checked={displayOptions.showLiuNian} onChange={(e) => setDisplayOptions(prev => ({...prev, showLiuNian: e.target.checked}))} />
                         <span className="text-zinc-300 text-xs font-bold font-serif select-none">流年</span>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showMinorStars} onChange={(e) => setDisplayOptions(prev => ({...prev, showMinorStars: e.target.checked}))} />
+                    <label className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-xl hover:bg-zinc-800 transition-colors">
+                        <input type="checkbox" className="w-4 h-4 accent-primary rounded cursor-pointer" checked={displayOptions.showMinorStars} onChange={(e) => setDisplayOptions(prev => ({...prev, showMinorStars: e.target.checked}))} />
                         <span className="text-zinc-300 text-xs font-bold font-serif select-none">辅星神煞</span>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showBoshiSpirit} onChange={(e) => setDisplayOptions(prev => ({...prev, showBoshiSpirit: e.target.checked}))} />
+                    <label className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-xl hover:bg-zinc-800 transition-colors">
+                        <input type="checkbox" className="w-4 h-4 accent-primary rounded cursor-pointer" checked={displayOptions.showBoshiSpirit} onChange={(e) => setDisplayOptions(prev => ({...prev, showBoshiSpirit: e.target.checked}))} />
                         <span className="text-zinc-300 text-xs font-bold font-serif select-none">博士十二神</span>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showSuiqianSpirit} onChange={(e) => setDisplayOptions(prev => ({...prev, showSuiqianSpirit: e.target.checked}))} />
+                    <label className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-xl hover:bg-zinc-800 transition-colors">
+                        <input type="checkbox" className="w-4 h-4 accent-primary rounded cursor-pointer" checked={displayOptions.showSuiqianSpirit} onChange={(e) => setDisplayOptions(prev => ({...prev, showSuiqianSpirit: e.target.checked}))} />
                         <span className="text-zinc-300 text-xs font-bold font-serif select-none">岁前十二神</span>
                     </label>
-                    <label className="flex items-center gap-2 cursor-pointer px-2 py-1.5 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
-                        <input type="checkbox" className="w-3.5 h-3.5 accent-primary rounded cursor-pointer" checked={displayOptions.showXiaoXian} onChange={(e) => setDisplayOptions(prev => ({...prev, showXiaoXian: e.target.checked}))} />
+                    <label className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-xl hover:bg-zinc-800 transition-colors">
+                        <input type="checkbox" className="w-4 h-4 accent-primary rounded cursor-pointer" checked={displayOptions.showXiaoXian} onChange={(e) => setDisplayOptions(prev => ({...prev, showXiaoXian: e.target.checked}))} />
                         <span className="text-zinc-300 text-xs font-bold font-serif select-none">小限</span>
                     </label>
                 </div>
-                {/* 分享按钮 */}
-                <button
-                    onClick={async () => {
-                        setIsSharing(true);
-                        try {
-                            const url = await generateShareCard('ziwei-chart-capture', chartData.meta);
-                            setShareDataUrl(url);
-                            setShareModalOpen(true);
-                        } finally {
-                            setIsSharing(false);
-                        }
-                    }}
-                    disabled={isSharing}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-zinc-300 bg-zinc-800 hover:bg-emerald-600 hover:text-white border border-zinc-700 hover:border-emerald-500 transition-all duration-200 shadow whitespace-nowrap flex-shrink-0 disabled:opacity-60"
-                >
-                    {isSharing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5" />}
-                    {isSharing ? "生成中..." : "分享命盘"}
-                </button>
-                {/* 导出 PDF 按钮 */}
-                <button
-                    onClick={async () => {
-                        const stats = calculateChartStats(chartData.palaces);
-                        await exportChartPDF('ziwei-chart-capture', {
-                            lifepalace: chartData.meta.life_palace,
-                            wuxingJu: chartData.meta.wuxing_ju,
-                            yinYangGender: chartData.meta.yin_yang_gender ?? '',
-                            lunarDateStr: chartData.meta.lunar_date_str,
-                            overallScore: stats.overallScore,
-                            destinyType: stats.destinyType,
-                        });
-                    }}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold text-zinc-300 bg-zinc-800 hover:bg-purple-600 hover:text-white border border-zinc-700 hover:border-purple-500 transition-all duration-200 shadow whitespace-nowrap flex-shrink-0"
-                >
-                    <Download className="w-3.5 h-3.5" />
-                    导出命盘
-                </button>
+
+                <div className="flex items-center gap-3 w-full lg:w-auto">
+                    <button
+                        onClick={async () => {
+                            setIsSharing(true);
+                            try {
+                                const url = await generateShareCard('ziwei-chart-capture', chartData.meta);
+                                setShareDataUrl(url);
+                                setShareModalOpen(true);
+                            } finally {
+                                setIsSharing(false);
+                            }
+                        }}
+                        disabled={isSharing}
+                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs font-bold text-zinc-100 bg-zinc-900 hover:bg-emerald-600 border border-zinc-800 hover:border-emerald-500 transition-all duration-300 shadow-xl disabled:opacity-50"
+                    >
+                        {isSharing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Share2 className="w-4 h-4" />}
+                        {isSharing ? "生成中..." : "分享命盘"}
+                    </button>
+                    <button
+                        onClick={async () => {
+                            const stats = calculateChartStats(chartData.palaces);
+                            await exportChartPDF('ziwei-chart-capture', {
+                                lifepalace: chartData.meta.life_palace,
+                                wuxingJu: chartData.meta.wuxing_ju,
+                                yinYangGender: chartData.meta.yin_yang_gender ?? '',
+                                lunarDateStr: chartData.meta.lunar_date_str,
+                                overallScore: stats.overallScore,
+                                destinyType: stats.destinyType,
+                            });
+                        }}
+                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-5 py-3 rounded-2xl text-xs font-bold text-zinc-100 bg-zinc-900 hover:bg-indigo-600 border border-zinc-800 hover:border-indigo-500 transition-all duration-300 shadow-xl"
+                    >
+                        <Download className="w-4 h-4" />
+                        导出命盘
+                    </button>
+                </div>
             </div>
 
             <div id="ziwei-chart-capture" className="grid grid-cols-4 grid-rows-4 gap-[1px] p-[1px] rounded flex-shrink-0 bg-zinc-800 border border-zinc-800 overflow-hidden shadow-2xl">
@@ -281,25 +285,25 @@ export function ZiweiChart({ chartData, isLoading }: { chartData: ZiweiChartData
 
                         <div className="flex flex-col gap-2 mx-auto w-3/4 max-w-xs text-sm md:text-[15px] font-serif">
                             <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
-                                <span className="text-zinc-500">基本命局</span>
-                                <span className="text-zinc-200 font-bold">{chartData.meta.wuxing_ju}</span>
+                                <span className="text-zinc-400">基本命局</span>
+                                <span className="text-zinc-100 font-bold">{chartData.meta.wuxing_ju}</span>
                             </div>
-                            <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
-                                <span className="text-zinc-500">命造阴阳</span>
-                                <span className="text-zinc-200 font-bold">{chartData.meta.yin_yang_gender || "未知"}</span>
+                            <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
+                                <span className="text-zinc-400">命造阴阳</span>
+                                <span className="text-zinc-100 font-bold">{chartData.meta.yin_yang_gender || "未知"}</span>
                             </div>
-                            <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
-                                <span className="text-zinc-500">命宫位置</span>
-                                <span className="text-zinc-200 font-bold">{chartData.meta.life_palace}</span>
+                            <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
+                                <span className="text-zinc-400">命宫位置</span>
+                                <span className="text-zinc-100 font-bold">{chartData.meta.life_palace}</span>
                             </div>
                             {chartData.meta.shen_gong && (
-                                <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
-                                    <span className="text-zinc-500">身宫位置</span>
+                                <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
+                                    <span className="text-zinc-400">身宫位置</span>
                                     <span className="text-amber-400 font-bold">{chartData.meta.shen_gong} ({chartData.meta.shen_gong_palace})</span>
                                 </div>
                             )}
-                            <div className="flex justify-between items-center border-b border-zinc-200 dark:border-zinc-800 pb-1">
-                                <span className="text-zinc-500">紫微定局</span>
+                            <div className="flex justify-between items-center border-b border-zinc-800 pb-1">
+                                <span className="text-zinc-400">紫微定局</span>
                                 <span className="text-primary font-bold">{chartData.meta.ziwei_position}宫</span>
                             </div>
                         </div>

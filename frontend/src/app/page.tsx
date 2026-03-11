@@ -61,22 +61,22 @@ export default function Home() {
             <div className="space-y-5 relative z-10">
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1.5 col-span-1">
-                  <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">公历年份</label>
+                  <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">公历年份</label>
                   <input type="number" min="1900" max="2100" value={formData.solar_year} onChange={e => setFormData({ ...formData, solar_year: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
                 </div>
                 <div className="space-y-1.5 col-span-1">
-                  <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">公历月份</label>
+                  <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">公历月份</label>
                   <input type="number" min="1" max="12" value={formData.solar_month} onChange={e => setFormData({ ...formData, solar_month: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
                 </div>
                 <div className="space-y-1.5 col-span-1">
-                  <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">日期</label>
+                  <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">日期</label>
                   <input type="number" min="1" max="31" value={formData.solar_day} onChange={e => setFormData({ ...formData, solar_day: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5 col-span-1">
-                  <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">生辰时支</label>
+                  <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">生辰时支</label>
                   <div className="relative">
                     <select
                       value={formData.hour_branch}
@@ -89,7 +89,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="space-y-1.5 col-span-1">
-                  <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">命造性别</label>
+                  <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">命造性别</label>
                   <div className="relative">
                     <select
                       value={formData.gender}
@@ -169,11 +169,11 @@ export default function Home() {
                   <DynamicAvatar size="sm" src="/nishi-avatar.jpg" />
                   <div>
                     <h2 className="text-sm font-bold tracking-widest text-zinc-900 dark:text-zinc-100 font-serif">天纪原著批断</h2>
-                    <p className="text-[10px] text-zinc-500 mt-0.5">{chartData.meta.yin_yang_gender} · {chartData.meta.wuxing_ju}</p>
+                    <p className="text-[10px] text-zinc-400 mt-0.5">{chartData.meta.yin_yang_gender} · {chartData.meta.wuxing_ju}</p>
                   </div>
                 </div>
 
-                <p className="text-[12px] leading-relaxed text-zinc-600 dark:text-zinc-400 font-serif">
+                <p className="text-[12px] leading-relaxed text-zinc-600 dark:text-zinc-300 font-serif">
                   命主为 <strong className="text-zinc-900 dark:text-zinc-200">{chartData.meta.yin_yang_gender}</strong>，命宫落于
                   <strong className="text-zinc-900 dark:text-zinc-200"> {chartData.meta.life_palace}</strong> 宫，统御
                   <strong className="text-zinc-900 dark:text-zinc-200"> {chartData.meta.wuxing_ju}</strong> 命造。
@@ -194,11 +194,11 @@ export default function Home() {
                           </div>
                           <div className="flex items-start gap-2 px-4 py-2.5">
                             <AlertTriangle className="w-3.5 h-3.5 text-amber-500 mt-0.5 flex-shrink-0" />
-                            <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-500 font-serif">注意宫位四化的影响，尤其是化忌落入时须谨慎应对。</p>
+                            <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-400 font-serif">注意宫位四化的影响，尤其是化忌落入时须谨慎应对。</p>
                           </div>
                           <div className="flex items-start gap-2 px-4 py-2.5">
                             <Lightbulb className="w-3.5 h-3.5 text-blue-500 mt-0.5 flex-shrink-0" />
-                            <p className="text-[11px] leading-relaxed text-zinc-500 dark:text-zinc-500 font-serif">可结合大限、流年的天干四化进行综合研判。</p>
+                            <p className="text-[11px] leading-relaxed text-zinc-300 font-serif">可结合大限、流年的天干四化进行综合研判。</p>
                           </div>
                         </div>
                       </div>
@@ -206,7 +206,7 @@ export default function Home() {
                   </div>
                 ) : (
                   <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 border-dashed flex justify-center items-center h-20">
-                    <p className="text-[11px] text-zinc-500 font-medium">( 此命格星系暂未收录入库 )</p>
+                    <p className="text-[11px] text-zinc-400 font-medium">( 此命格星系暂未收录入库 )</p>
                   </div>
                 )}
               </div>
