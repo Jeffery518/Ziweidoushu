@@ -62,15 +62,15 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1.5 col-span-1">
                   <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">公历年份</label>
-                  <input type="number" min="1900" max="2100" value={formData.solar_year} onChange={e => setFormData({ ...formData, solar_year: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+                  <input type="number" min="1900" max="2100" value={formData.solar_year} onChange={e => setFormData({ ...formData, solar_year: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
                 </div>
                 <div className="space-y-1.5 col-span-1">
                   <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">公历月份</label>
-                  <input type="number" min="1" max="12" value={formData.solar_month} onChange={e => setFormData({ ...formData, solar_month: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+                  <input type="number" min="1" max="12" value={formData.solar_month} onChange={e => setFormData({ ...formData, solar_month: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
                 </div>
                 <div className="space-y-1.5 col-span-1">
                   <label className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">日期</label>
-                  <input type="number" min="1" max="31" value={formData.solar_day} onChange={e => setFormData({ ...formData, solar_day: e.target.value })} className="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+                  <input type="number" min="1" max="31" value={formData.solar_day} onChange={e => setFormData({ ...formData, solar_day: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
                 </div>
               </div>
 
@@ -81,7 +81,7 @@ export default function Home() {
                     <select
                       value={formData.hour_branch}
                       onChange={e => setFormData({ ...formData, hour_branch: e.target.value })}
-                      className="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all appearance-none font-medium text-zinc-800 dark:text-zinc-200"
+                      className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all appearance-none font-medium text-zinc-800 dark:text-zinc-200"
                     >
                       {['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'].map(v => <option key={v} value={v}>{v}时</option>)}
                     </select>
@@ -94,7 +94,7 @@ export default function Home() {
                     <select
                       value={formData.gender}
                       onChange={e => setFormData({ ...formData, gender: e.target.value })}
-                      className="w-full bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all appearance-none font-medium text-zinc-800 dark:text-zinc-200"
+                      className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all appearance-none font-medium text-zinc-800 dark:text-zinc-200"
                     >
                       <option value="男">乾造 (男)</option>
                       <option value="女">坤造 (女)</option>
@@ -183,7 +183,7 @@ export default function Home() {
                   <div className="space-y-3 w-full">
                     {ragContext.map((item, idx) => (
                       <div key={idx} className="rounded-xl border border-zinc-200/50 dark:border-zinc-800/80 overflow-hidden">
-                        <div className="px-4 py-2 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200/50 dark:border-zinc-800/80">
+                        <div className="px-4 py-2 bg-zinc-900 border-b border-zinc-800/80">
                           <h4 className="text-zinc-800 dark:text-zinc-200 font-bold text-[12px] font-serif">{item.star} 坐命</h4>
                         </div>
                         {/* Structured 3-section cards */}
@@ -205,7 +205,7 @@ export default function Home() {
                     ))}
                   </div>
                 ) : (
-                  <div className="bg-zinc-50 dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-100 dark:border-zinc-800 border-dashed flex justify-center items-center h-20">
+                  <div className="bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 border-dashed flex justify-center items-center h-20">
                     <p className="text-[11px] text-zinc-500 font-medium">( 此命格星系暂未收录入库 )</p>
                   </div>
                 )}
