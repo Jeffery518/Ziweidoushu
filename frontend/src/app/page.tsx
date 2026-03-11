@@ -29,7 +29,7 @@ export default function Home() {
             isPanelVisible ? "w-full lg:w-[380px] xl:w-[420px] opacity-100 scale-100" : "w-0 opacity-0 scale-95 overflow-hidden h-0 lg:h-auto"
           )}
         >
-          <div className="p-6 md:p-8 rounded-2xl bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl border border-zinc-200 dark:border-zinc-800 shadow-xl shadow-black/5 relative overflow-hidden group">
+          <div className="p-6 md:p-8 rounded-2xl bg-zinc-950/95 backdrop-blur-xl border border-zinc-800 shadow-xl shadow-black/5 relative overflow-hidden group">
 
             {/* 装饰性背景光晕 */}
             <div className="absolute -top-32 -right-32 w-64 h-64 bg-primary/5 rounded-full blur-[60px] group-hover:bg-primary/10 transition-colors duration-700 pointer-events-none" />
@@ -106,7 +106,7 @@ export default function Home() {
 
               {/* 十二时辰现代时间对照表 */}
               <div className="pt-2">
-                <div className="bg-zinc-50/50 dark:bg-zinc-900/20 rounded-2xl p-4 border border-zinc-200/60 dark:border-zinc-800/60 shadow-sm relative overflow-hidden group/table">
+                  <div className="bg-zinc-900/40 rounded-2xl p-4 border border-zinc-800 shadow-sm relative overflow-hidden group/table">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover/table:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                   <div className="flex items-center justify-between mb-3 relative z-10">
@@ -122,9 +122,9 @@ export default function Home() {
                       { b: '辰', t: '07:00-09:00' }, { b: '巳', t: '09:00-11:00' }, { b: '午', t: '11:00-13:00' }, { b: '未', t: '13:00-15:00' },
                       { b: '申', t: '15:00-17:00' }, { b: '酉', t: '17:00-19:00' }, { b: '戌', t: '19:00-21:00' }, { b: '亥', t: '21:00-23:00' }
                     ].map(item => (
-                      <div key={item.b} className="flex flex-col items-center justify-center bg-white/80 dark:bg-black/40 border border-zinc-200/80 dark:border-zinc-800/80 rounded-xl py-1.5 px-1 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:border-primary/40 hover:bg-primary/5 hover:shadow-md transition-all duration-300 cursor-default group/item transform hover:-translate-y-0.5">
-                        <span className="text-[12px] font-bold text-zinc-700 dark:text-zinc-300 font-serif group-hover/item:text-primary transition-colors">{item.b}</span>
-                        <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-mono tracking-tighter mt-0.5">{item.t}</span>
+                      <div key={item.b} className="flex flex-col items-center justify-center bg-black/40 border border-zinc-800/80 rounded-xl py-1.5 px-1 shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:border-primary/40 hover:bg-primary/5 hover:shadow-md transition-all duration-300 cursor-default group/item transform hover:-translate-y-0.5">
+                        <span className="text-[12px] font-bold text-zinc-300 font-serif group-hover/item:text-primary transition-colors">{item.b}</span>
+                        <span className="text-[10px] text-zinc-400 font-mono tracking-tighter mt-0.5">{item.t}</span>
                       </div>
                     ))}
                   </div>
@@ -134,7 +134,7 @@ export default function Home() {
               <button
                 onClick={handleGenerate}
                 disabled={isLoading}
-                className="w-full relative mt-6 inline-flex items-center justify-center overflow-hidden text-sm font-medium rounded-xl group bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
+                className="w-full relative mt-6 inline-flex items-center justify-center overflow-hidden text-sm font-medium rounded-xl group bg-zinc-900 text-zinc-100 hover:bg-zinc-800 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 border border-transparent dark:border-zinc-700/50 transition-all duration-300 shadow-md hover:shadow-xl hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
               >
                 <span className="relative w-full px-5 py-3.5 flex items-center justify-center gap-2">
                   {isLoading ? (
@@ -163,7 +163,7 @@ export default function Home() {
 
           {/* 大师解盘 — 结构化 AI 洞见卡片 */}
           {chartData && (
-            <div className="w-full bg-white/95 dark:bg-zinc-950/95 backdrop-blur-xl rounded-2xl p-6 border border-zinc-200 dark:border-zinc-800 shadow-xl shadow-black/5 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150 fill-mode-both">
+            <div className="w-full bg-zinc-950/95 backdrop-blur-xl rounded-2xl p-6 border border-zinc-800 shadow-xl shadow-black/5 relative overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150 fill-mode-both">
               <div className="flex flex-col gap-4 items-start relative z-10 w-full">
                 <div className="flex items-center gap-3 w-full border-b border-zinc-100 dark:border-zinc-800/60 pb-4">
                   <DynamicAvatar size="sm" src="/nishi-avatar.jpg" />
@@ -220,7 +220,7 @@ export default function Home() {
           {/* 绝对悬浮：控制面板显示/隐藏开关 */}
           <button
             onClick={() => setIsPanelVisible(!isPanelVisible)}
-            className="absolute -top-4 md:top-0 right-0 lg:-left-4 lg:right-auto z-50 p-3 rounded-xl bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg hover:shadow-xl text-zinc-600 dark:text-zinc-300 hover:text-primary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 backdrop-blur-md hidden lg:flex items-center gap-2 group"
+            className="absolute -top-4 md:top-0 right-0 lg:-left-4 lg:right-auto z-50 p-3 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg hover:shadow-xl text-zinc-600 dark:text-zinc-300 hover:text-primary dark:hover:text-primary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 backdrop-blur-md hidden lg:flex items-center gap-2 group"
             aria-label={isPanelVisible ? "隐藏设置" : "展开设置参数"}
           >
             <Settings2 className={cn("w-5 h-5 transition-transform duration-500", !isPanelVisible && "rotate-90 text-primary")} />
@@ -231,7 +231,7 @@ export default function Home() {
           {!isPanelVisible && (
             <button
               onClick={() => setIsPanelVisible(true)}
-              className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-primary text-primary-foreground shadow-2xl lg:hidden flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-primary/30 animate-in zoom-in-50 duration-300"
+              className="fixed bottom-6 right-6 z-50 p-4 rounded-full bg-zinc-900 dark:bg-zinc-800 text-zinc-100 shadow-2xl lg:hidden flex items-center justify-center focus:outline-none focus:ring-4 focus:ring-zinc-500/30 animate-in zoom-in-50 duration-300 border border-zinc-800 dark:border-zinc-700 hover:bg-zinc-800 dark:hover:bg-zinc-700 transition-colors"
             >
               <Settings2 className="w-6 h-6" />
             </button>
@@ -245,7 +245,7 @@ export default function Home() {
                 <ChartInsightPanel chartData={chartData} />
               </div>
             ) : (
-              <div className="w-full max-w-2xl mx-auto aspect-[4/3] md:aspect-video flex flex-col items-center justify-center bg-white/50 dark:bg-zinc-950/30 backdrop-blur-sm rounded-3xl border border-dashed border-zinc-300 dark:border-zinc-800 shadow-sm text-center p-8 transition-all hover:bg-white/80 dark:hover:bg-zinc-950/60">
+              <div className="w-full max-w-2xl mx-auto aspect-[4/3] md:aspect-video flex flex-col items-center justify-center bg-zinc-950/30 backdrop-blur-sm rounded-3xl border border-dashed border-zinc-800 shadow-sm text-center p-8 transition-all hover:bg-zinc-950/60">
                 <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 flex items-center justify-center mb-6 shadow-inner relative group">
                   <div className="absolute inset-0 bg-primary/10 rounded-2xl scale-0 group-hover:scale-100 transition-transform duration-500" />
                   <Sparkles className="w-8 h-8 text-zinc-400 group-hover:text-primary transition-colors duration-300 relative z-10" />
@@ -257,7 +257,7 @@ export default function Home() {
                 {!isPanelVisible && (
                   <button
                     onClick={() => setIsPanelVisible(true)}
-                    className="mt-6 px-6 py-2.5 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 text-sm font-bold shadow-md hover:shadow-lg transition-all"
+                    className="mt-6 px-6 py-2.5 rounded-full bg-zinc-900 dark:bg-zinc-800 text-zinc-100 text-sm font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all border border-transparent dark:border-zinc-700/50"
                   >
                     调出参数面板
                   </button>
