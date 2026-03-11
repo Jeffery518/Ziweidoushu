@@ -118,21 +118,22 @@ export function TimeController({ startYear, currentYear, onYearChange, className
                     </div>
                 </div>
 
-                {/* Readout toggle button absolute/relative logic */}
-                <div className="md:absolute top-4 right-4 flex justify-end w-full md:w-auto">
-                    <button
-                        onClick={() => setShowInfo(!showInfo)}
-                        className={cn(
-                            "flex items-center gap-1.5 text-[11px] px-2.5 py-1.5 rounded-full transition-colors border",
-                            showInfo
-                                ? "bg-primary/10 text-primary border-primary/20"
-                                : "bg-zinc-800/50 text-zinc-400 border-zinc-800 hover:text-zinc-200"
-                        )}
-                    >
-                        <Info className="w-3.5 h-3.5" />
-                        <span>大运流年图解</span>
-                    </button>
-                </div>
+            </div>
+
+            {/* Readout toggle button - Now centered as requested */}
+            <div className="w-full flex justify-center mt-2 border-t border-white/5 pt-4">
+                <button
+                    onClick={() => setShowInfo(!showInfo)}
+                    className={cn(
+                        "flex items-center gap-2 text-[12px] px-6 py-2 rounded-full transition-all duration-300 border font-bold shadow-sm",
+                        showInfo
+                            ? "bg-primary/20 text-primary border-primary/30 shadow-primary/20"
+                            : "bg-zinc-800/80 text-zinc-300 border-zinc-700 hover:border-zinc-500 hover:text-zinc-100"
+                    )}
+                >
+                    <Info className="w-4 h-4" />
+                    <span>大运流年图解</span>
+                </button>
             </div>
 
             {/* 命理知识科普面板 */}

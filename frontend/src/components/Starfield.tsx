@@ -1,109 +1,83 @@
 "use client";
 
-import React, { useRef, useEffect } from "react";
+import React from "react";
+import { motion } from "framer-motion";
 
-export function Starfield() {
-    const canvasRef = useRef<HTMLCanvasElement>(null);
+export function StarField() {
+  const stars = Array.from({ length: 150 }).map((_, i) => ({
+    id: i,
+    top: `${Math.random() * 100}%`,
+    left: `${Math.random() * 100}%`,
+    size: Math.random() * 2 + 1,
+    opacity: Math.random() * 0.7 + 0.3,
+    duration: Math.random() * 3 + 2,
+    delay: Math.random() * 5,
+  }));
 
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
+  const shootingStars = Array.from({ length: 3 }).map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      delay: Math.random() * 15 + 5,
+  }));
 
-        let width = window.innerWidth;
-        let height = window.innerHeight;
-        canvas.width = width;
-        canvas.height = height;
-
-        const stars: { x: number; y: number; z: number; pz: number }[] = [];
-        const numStars = 800; // 3D 景深粒子数
-        const speed = 2.5; // 穿梭速度
-
-        // 初始化 3D 星辰
-        for (let i = 0; i < numStars; i++) {
-            stars.push({
-                x: Math.random() * width * 2 - width,
-                y: Math.random() * height * 2 - height,
-                z: Math.random() * width,
-                pz: Math.random() * width // 用于绘制视差拖尾
-            });
-        }
-
-        let animationFrameId: number;
-
-        const render = () => {
-            // 使用带有透明度的黑纯色覆盖，制造出拖尾(彗星/光速穿梭)的视觉残留错觉
-            ctx.fillStyle = "rgba(9, 9, 11, 0.4)"; // 匹配 Tailwind background (zinc-950)
-            ctx.fillRect(0, 0, width, height);
-
-            const cx = width / 2;
-            const cy = height / 2;
-
-            stars.forEach((star) => {
-                // 星辰向镜头冲来 (Z轴减小)
-                star.z -= speed;
-
-                // 如果移动到了镜头后方，将其重置到极远处
-                if (star.z <= 0) {
-                    star.x = Math.random() * width * 2 - width;
-                    star.y = Math.random() * height * 2 - height;
-                    star.z = width;
-                    star.pz = width;
-                }
-
-                // 3D 到 2D 的透视投影计算 (中心发散)
-                const fov = width; // 视场深度控制比率
-
-                // 当前帧的屏幕坐标
-                const sx = cx + (star.x / star.z) * fov;
-                const sy = cy + (star.y / star.z) * fov;
-
-                // 上一帧的屏幕坐标 (用于连线产生光速飞行的拖尾)
-                const px = cx + (star.x / star.pz) * fov;
-                const py = cy + (star.y / star.pz) * fov;
-
-                star.pz = star.z;
-
-                // 距离镜头越近(Z越小)，星点越大，透明度越高
-                const starRadius = Math.max(0, (1 - star.z / width) * 2.5);
-                const alpha = Math.max(0, 1 - star.z / width);
-
-                ctx.beginPath();
-                ctx.moveTo(px, py);
-                ctx.lineTo(sx, sy);
-
-                // 流星光效色彩
-                ctx.strokeStyle = `rgba(147, 197, 253, ${alpha})`; // Blue-300
-                ctx.lineWidth = starRadius;
-                ctx.lineCap = "round";
-                ctx.stroke();
-            });
-
-            animationFrameId = requestAnimationFrame(render);
-        };
-
-        render();
-
-        const handleResize = () => {
-            width = window.innerWidth;
-            height = window.innerHeight;
-            canvas.width = width;
-            canvas.height = height;
-        };
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            cancelAnimationFrame(animationFrameId);
-            window.removeEventListener("resize", handleResize);
-        };
-    }, []);
-
-    return (
-        <canvas
-            ref={canvasRef}
-            className="fixed inset-0 z-0 pointer-events-none"
-            style={{ width: '100vw', height: '100vh', display: 'block' }}
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden bg-[#050505]">
+      {/* Base deep space gradient */}
+      <div className="absolute inset-0 bg-radial-gradient from-indigo-900/10 via-zinc-950 to-black" />
+      
+      {/* Stars */}
+      {stars.map((star) => (
+        <motion.div
+          key={star.id}
+          className="absolute rounded-full bg-white shadow-[0_0_8px_white]"
+          style={{
+            top: star.top,
+            left: star.left,
+            width: star.size,
+            height: star.size,
+            opacity: star.opacity,
+          }}
+          animate={{
+            opacity: [star.opacity, 0.2, star.opacity],
+            scale: [1, 1.2, 1],
+          }}
+          transition={{
+            duration: star.duration,
+            repeat: Infinity,
+            delay: star.delay,
+            ease: "easeInOut",
+          }}
         />
-    );
+      ))}
+
+      {/* Shooting Stars */}
+      {shootingStars.map((ss) => (
+          <motion.div
+            key={`ss-${ss.id}`}
+            className="absolute h-[1px] w-[60px] bg-gradient-to-r from-transparent via-blue-400 to-white opacity-0"
+            style={{
+                top: `${Math.random() * 50}%`,
+                left: ss.left,
+                transform: "rotate(-45deg)",
+            }}
+            animate={{
+                x: [0, -500],
+                y: [0, 500],
+                opacity: [0, 1, 0],
+            }}
+            transition={{
+                duration: 1.5,
+                repeat: Infinity,
+                delay: ss.delay,
+                repeatDelay: Math.random() * 20 + 10,
+                ease: "easeIn",
+            }}
+          />
+      ))}
+
+      {/* Distant nebulae flares */}
+      <div className="absolute top-1/4 -left-1/4 w-[80%] h-[80%] bg-blue-900/10 rounded-full blur-[160px] animate-pulse pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-1/4 w-[60%] h-[60%] bg-indigo-900/10 rounded-full blur-[140px] animate-pulse pointer-events-none" />
+    </div>
+  );
 }

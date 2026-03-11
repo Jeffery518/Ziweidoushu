@@ -9,6 +9,7 @@ import { RealTimeClock } from "@/components/RealTimeClock";
 import { useZiweiChart } from "@/hooks/use-ziwei-chart";
 import { FeedbackWidget } from "@/components/FeedbackWidget";
 import { NiHaishaIntro } from "@/components/NiHaishaIntro";
+import { StarField } from "@/components/Starfield";
 import { cn } from "@/lib/utils";
 
 export default function Home() {
@@ -18,7 +19,9 @@ export default function Home() {
   const [isPanelVisible, setIsPanelVisible] = useState(true);
 
   return (
-    <div className="relative w-full flex justify-center py-6 md:py-10 px-4 md:px-8 bg-transparent min-h-screen text-zinc-100 overflow-hidden">
+    <div className="relative w-full flex justify-center py-6 md:py-10 px-4 md:px-8 bg-black min-h-screen text-zinc-100 overflow-hidden">
+      {/* Dynamic Starry Background */}
+      <StarField />
 
       <div className="max-w-7xl w-full flex flex-col lg:flex-row gap-6 md:gap-8 relative z-10 transition-all duration-500">
 
