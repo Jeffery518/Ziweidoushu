@@ -10,6 +10,14 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  async rewrites() {
+    return [
+      {
+        source: "/api-backend/:path*",
+        destination: "http://tianji-backend:8000/:path*",
+      },
+    ];
+  },
 };
 
 export default nextConfig;
