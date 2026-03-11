@@ -38,7 +38,7 @@ export default function Home() {
               <div className="flex items-center gap-3">
                 <DynamicAvatar size="md" src="/nishi-avatar.jpg" className="shadow-[0_0_15px_rgba(var(--primary),0.1)] rounded-full" />
                 <div>
-                  <h1 className="text-xl font-bold tracking-wider font-serif bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 to-zinc-600 dark:from-zinc-100 dark:to-zinc-500">
+                  <h1 className="text-xl font-bold tracking-wider font-serif bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 to-zinc-400">
                     天纪·紫微起盘
                   </h1>
                   <p className="text-[11px] text-zinc-500 mt-0.5 tracking-wider uppercase">
@@ -62,15 +62,15 @@ export default function Home() {
               <div className="grid grid-cols-3 gap-3">
                 <div className="space-y-1.5 col-span-1">
                   <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">公历年份</label>
-                  <input type="number" min="1900" max="2100" value={formData.solar_year} onChange={e => setFormData({ ...formData, solar_year: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+                  <input type="number" min="1900" max="2100" value={formData.solar_year} onChange={e => setFormData({ ...formData, solar_year: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium text-zinc-100" />
                 </div>
                 <div className="space-y-1.5 col-span-1">
                   <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">公历月份</label>
-                  <input type="number" min="1" max="12" value={formData.solar_month} onChange={e => setFormData({ ...formData, solar_month: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+                  <input type="number" min="1" max="12" value={formData.solar_month} onChange={e => setFormData({ ...formData, solar_month: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium text-zinc-100" />
                 </div>
                 <div className="space-y-1.5 col-span-1">
                   <label className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider">日期</label>
-                  <input type="number" min="1" max="31" value={formData.solar_day} onChange={e => setFormData({ ...formData, solar_day: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium" />
+                  <input type="number" min="1" max="31" value={formData.solar_day} onChange={e => setFormData({ ...formData, solar_day: e.target.value })} className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all font-medium text-zinc-100" />
                 </div>
               </div>
 
@@ -81,7 +81,7 @@ export default function Home() {
                     <select
                       value={formData.hour_branch}
                       onChange={e => setFormData({ ...formData, hour_branch: e.target.value })}
-                      className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all appearance-none font-medium text-zinc-800 dark:text-zinc-200"
+                      className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all appearance-none font-medium text-zinc-100"
                     >
                       {['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'].map(v => <option key={v} value={v}>{v}时</option>)}
                     </select>
@@ -94,7 +94,7 @@ export default function Home() {
                     <select
                       value={formData.gender}
                       onChange={e => setFormData({ ...formData, gender: e.target.value })}
-                      className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all appearance-none font-medium text-zinc-800 dark:text-zinc-200"
+                      className="w-full bg-zinc-900/50 border border-zinc-800 rounded-xl p-3 outline-none text-sm focus:border-primary/50 focus:ring-2 focus:ring-primary/20 transition-all appearance-none font-medium text-zinc-100"
                     >
                       <option value="男">乾造 (男)</option>
                       <option value="女">坤造 (女)</option>
@@ -110,7 +110,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover/table:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                   <div className="flex items-center justify-between mb-3 relative z-10">
-                    <h4 className="text-[12px] font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-1.5 font-serif tracking-widest pl-1">
+                    <h4 className="text-[12px] font-bold text-zinc-100 flex items-center gap-1.5 font-serif tracking-widest pl-1">
                       <Clock className="w-3.5 h-3.5 text-primary/70" />
                       十二时辰速查
                     </h4>
