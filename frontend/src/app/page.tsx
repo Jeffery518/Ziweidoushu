@@ -220,15 +220,7 @@ export default function Home() {
         {/* 右侧核心排盘区 */}
         <main className="flex-1 flex flex-col relative w-full h-full min-h-[60vh] lg:min-h-0 items-center justify-center lg:justify-start">
 
-          {/* 绝对悬浮：控制面板显示/隐藏开关 */}
-          <button
-            onClick={() => setIsPanelVisible(!isPanelVisible)}
-            className="absolute -top-4 md:top-0 right-0 lg:-left-4 lg:right-auto z-50 p-3 rounded-xl bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-lg hover:shadow-xl text-zinc-600 dark:text-zinc-300 hover:text-primary dark:hover:text-primary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/20 backdrop-blur-md hidden lg:flex items-center gap-2 group"
-            aria-label={isPanelVisible ? "隐藏设置" : "展开设置参数"}
-          >
-            <Settings2 className={cn("w-5 h-5 transition-transform duration-500", !isPanelVisible && "rotate-90 text-primary")} />
-            {!isPanelVisible && <span className="text-[11px] font-bold tracking-widest uppercase opacity-0 group-hover:opacity-100 w-0 group-hover:w-auto overflow-hidden transition-all duration-300">调出设置表单</span>}
-          </button>
+
 
           {/* 移动端悬浮调出按钮 */}
           {!isPanelVisible && (
