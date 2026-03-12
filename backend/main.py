@@ -122,33 +122,44 @@ def generate_ziwei_chart(req: ChartRequestDTO):
             f"农历 {lunar.getYearInGanZhi()}年 {lunar.getMonthInChinese()}月 {lunar.getDayInChinese()}"
         )
 
-        # RAG 知识融合 (根据 7 级标准智能匹配)
+        # RAG 知识融合 (权重化分析逻辑)
         life_palace_branch = chart_data['meta']['life_palace'][-1]
         life_palace_data   = next((p for p in chart_data['palaces'] if p['branch'] == life_palace_branch), None)
+        
         rag_context = []
         if life_palace_data:
-            for star in life_palace_data['major_stars']:
-                if star in NISHI_KNOWLEDGE.get("stars_interpretation", {}):
-                    knowledge = NISHI_KNOWLEDGE["stars_interpretation"][star]
-                    brightness = life_palace_data['star_brightness'].get(star, "平")
-                    
-                    # 优先匹配具体宫位+亮度，例如 "午_庙"
-                    # 同时也支持通用 "命宫" 解读
-                    specific_key = f"{life_palace_data['branch']}_{brightness}"
-                    
-                    results = []
-                    # 1. 尝试匹配具体位置亮度
-                    if specific_key in knowledge.get("palaces", {}):
-                        results.append(knowledge["palaces"][specific_key].get("nishi_quote", ""))
-                    # 2. 尝试模糊匹配 (将 '不' 映射给 '陷' 处理，如果知识库没更新)
-                    elif brightness in ["陷", "不"] and f"{life_palace_data['branch']}_陷" in knowledge.get("palaces", {}):
-                        results.append(knowledge["palaces"][f"{life_palace_data['branch']}_陷"].get("nishi_quote", ""))
-                    # 3. 兜底命宫通用解读
-                    elif "命宫" in knowledge.get("palaces", {}):
-                        results.append(knowledge["palaces"]["命宫"].get("nishi_quote", ""))
-                    
-                    for quote in results:
-                        if quote: rag_context.append({"star": star, "quote": quote})
+            # 按权重整理核心解读建议
+            for level_tag, star_list in [("核心主星", "major_stars"), ("重要辅星", "minor_stars"), ("杂曜神煞", "c_stars")]:
+                for star in life_palace_data.get(star_list, []):
+                    if star in NISHI_KNOWLEDGE.get("stars_interpretation", {}):
+                        knowledge = NISHI_KNOWLEDGE["stars_interpretation"][star]
+                        brightness = life_palace_data['star_brightness'].get(star, "平")
+                        
+                        specific_key = f"{life_palace_data['branch']}_{brightness}"
+                        quote = ""
+                        
+                        # 权重策略：优先位置+亮度，次之宫位
+                        palace_knowledge = knowledge.get("palaces", {})
+                        if specific_key in palace_knowledge:
+                            quote = palace_knowledge[specific_key].get("nishi_quote", "")
+                        elif brightness in ["陷", "不"] and f"{life_palace_data['branch']}_陷" in palace_knowledge:
+                            quote = palace_knowledge[f"{life_palace_data['branch']}_陷"].get("nishi_quote", "")
+                        elif "命宫" in palace_knowledge:
+                            quote = palace_knowledge["命宫"].get("nishi_quote", "")
+                        
+                        if quote:
+                            rag_context.append({
+                                "level": level_tag,
+                                "star": star,
+                                "weight": life_palace_data['star_weights'].get(star, 10),
+                                "quote": quote
+                            })
+
+        # 增加命主/身主参考
+        rag_context.append({
+            "level": "核心元神",
+            "info": f"命主：{chart_data['meta'].get('ming_zhu')}，身主：{chart_data['meta'].get('shen_zhu')}"
+        })
 
         # 统计计数
         _increment_chart_count()

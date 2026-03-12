@@ -16,6 +16,13 @@ WUXING_JU = {2: "水二局", 3: "木三局", 4: "金四局", 5: "土五局", 6: 
 def get_stem_index(stem: str) -> int: return TIANGAN.index(stem)
 def get_branch_index(branch: str) -> int: return DIZHI.index(branch)
 
+# 星曜权重等级
+STAR_WEIGHTS = {
+    "甲": 100, # 主星
+    "乙": 40,  # 辅星/煞星
+    "丙": 10,  # 杂曜/神煞
+}
+
 class ZiweiCoreEngine:
     def __init__(self, year_stem: str, year_branch: str, month_leap_num: int, day: int, hour_branch: str, gender: str = "男"):
         self.year_stem = year_stem
@@ -28,9 +35,9 @@ class ZiweiCoreEngine:
         self.palaces: Dict[str, Dict[str, Any]] = {
             bz: {
                 "branch": bz, "stem": "", "name": "", "major_stars": [], 
-                "minor_stars": [], "transformations": [], "dayun": "",
+                "minor_stars": [], "c_stars": [], "transformations": [], "dayun": "",
                 "boshi_spirit": "", "suiqian_spirit": "", "star_brightness": {}, 
-                "shen_sha": [], "xiao_xian": ""
+                "xiao_xian": "", "star_weights": {}
             } 
             for bz in DIZHI
         }
@@ -309,7 +316,70 @@ class ZiweiCoreEngine:
         if xc_branch: self.palaces[xc_branch]["minor_stars"].append("咸池")
         if ty_branch: self.palaces[ty_branch]["minor_stars"].append("天姚")
 
-    def _calculate_star_brightness(self):
+    def _arrange_c_level_stars(self, life_branch: str, shengong_branch: str):
+        """安丙级星 (杂曜/神煞) - PDF Page 19-21"""
+        # 1. 天官、天福、天厨 (干系)
+        tianguan = {"甲":"未","乙":"辰","丙":"巳","丁":"寅","戊":"卯","己":"酉","庚":"亥","辛":"酉","壬":"戌","癸":"午"}
+        tianfu_star = {"甲":"酉","乙":"申","丙":"子","丁":"亥","戊":"卯","己":"寅","庚":"午","辛":"巳","壬":"午","癸":"巳"}
+        tianchu = {"甲":"巳","乙":"午","丙":"子","丁":"巳","戊":"午","己":"申","庚":"寅","辛":"午","壬":"酉","癸":"亥"}
+        
+        self.palaces[tianguan[self.year_stem]]["c_stars"].append("天官")
+        self.palaces[tianfu_star[self.year_stem]]["c_stars"].append("天福")
+        self.palaces[tianchu[self.year_stem]]["c_stars"].append("天厨")
+
+        # 2. 解神、天哭、天虚、龙池、凤阁 (支系)
+        jieshen = {"子":"戌","丑":"酉","寅":"申","卯":"未","辰":"午","巳":"巳","午":"辰","未":"卯","申":"寅","酉":"丑","戌":"子","亥":"亥"}
+        self.palaces[jieshen[self.year_branch]]["c_stars"].append("解神")
+        
+        yb_idx = get_branch_index(self.year_branch)
+        wu_idx = get_branch_index("午")
+        self.palaces[DIZHI[(wu_idx - yb_idx + 12) % 12]]["c_stars"].append("天哭")
+        self.palaces[DIZHI[(wu_idx + yb_idx) % 12]]["c_stars"].append("天虚")
+        
+        chen_idx = get_branch_index("辰")
+        xu_idx = get_branch_index("戌")
+        self.palaces[DIZHI[(chen_idx + yb_idx) % 12]]["c_stars"].append("龙池")
+        self.palaces[DIZHI[(xu_idx - yb_idx + 12) % 12]]["c_stars"].append("凤阁")
+
+        # 3. 孤辰、寡宿
+        guchen_map = {"寅":"巳","卯":"巳","辰":"巳","巳":"申","午":"申","未":"申","申":"亥","酉":"亥","戌":"亥","亥":"寅","子":"寅","丑":"寅"}
+        guasu_map = {"寅":"丑","卯":"丑","辰":"丑","巳":"辰","午":"辰","未":"辰","申":"未","酉":"未","戌":"未","亥":"戌","子":"戌","丑":"戌"}
+        self.palaces[guchen_map[self.year_branch]]["c_stars"].append("孤辰")
+        self.palaces[guasu_map[self.year_branch]]["c_stars"].append("寡宿")
+
+        # 4. 天伤、天使 (命宫固定偏移)
+        # 天伤在交友宫 (Ming+5), 天使在疾厄宫 (Ming+7)
+        life_idx = get_branch_index(life_branch)
+        self.palaces[DIZHI[(life_idx + 5) % 12]]["c_stars"].append("天伤")
+        self.palaces[DIZHI[(life_idx + 7) % 12]]["c_stars"].append("天使")
+
+        # 5. 天才、天寿
+        # 天才：由命宫起子顺行，数至本生年支
+        self.palaces[DIZHI[(life_idx + yb_idx) % 12]]["c_stars"].append("天才")
+        # 天寿：由身宫起子顺行，数至本生年支
+        sg_idx = get_branch_index(shengong_branch)
+        self.palaces[DIZHI[(sg_idx + yb_idx) % 12]]["c_stars"].append("天寿")
+
+        # 6. 旬空 (旬中空亡)
+        # 根据六十甲子旬算：甲子旬空戌亥，甲戌旬空申酉...
+        ys_idx = get_stem_index(self.year_stem)
+        start_idx = (yb_idx - ys_idx + 12) % 12
+        xun_kong_1 = DIZHI[(start_idx - 2 + 12) % 12]
+        xun_kong_2 = DIZHI[(start_idx - 1 + 12) % 12]
+        self.palaces[xun_kong_1]["c_stars"].append("旬空")
+        self.palaces[xun_kong_2]["c_stars"].append("旬空")
+
+        # 7. 截空 (截路空亡)
+        jiekong_map = {"甲":"申酉","己":"申酉","乙":"午未","庚":"午未","丙":"辰巳","辛":"辰巳","丁":"寅卯","壬":"寅卯","戊":"子丑","癸":"子丑"}
+        res = jiekong_map.get(self.year_stem, "")
+        for char in res:
+            self.palaces[char]["c_stars"].append("截空")
+
+    def _arrange_master_stars(self, life_branch: str):
+        """安命主与身主 (PDF Page 21)"""
+        ming_zhu_map = {"子":"贪狼","丑":"巨门","寅":"禄存","卯":"文曲","辰":"廉贞","巳":"武曲","午":"破军","未":"武曲","申":"廉贞","酉":"文曲","戌":"禄存","亥":"巨门"}
+        shen_zhu_map = {"子":"火星","丑":"天相","寅":"天梁","卯":"天同","辰":"文昌","巳":"天机","午":"火星","未":"天相","申":"天梁","酉":"天同","戌":"文昌","亥":"天机"}
+        return ming_zhu_map[life_branch], shen_zhu_map[self.year_branch]
         """设定简单的主星庙旺平陷状态 (MVP版本，仅取几个典型)"""
         brightness_rules = {
             "紫微": {"子": "平", "丑": "平", "寅": "旺", "卯": "旺", "辰": "平", "巳": "旺", "午": "庙", "未": "庙", "申": "平", "酉": "旺", "戌": "得", "亥": "旺"},
@@ -348,7 +418,15 @@ class ZiweiCoreEngine:
 
         for p in self.palaces.values():
             branch = p["branch"]
-            for star in p["major_stars"] + p["minor_stars"]:
+            # 合并所有星曜计算权重与亮度
+            all_stars = [("甲", s) for s in p["major_stars"]] + \
+                        [("乙", s) for s in p["minor_stars"]] + \
+                        [("丙", s) for s in p["c_stars"]]
+            
+            for level, star in all_stars:
+                # 记录权重
+                p["star_weights"][star] = STAR_WEIGHTS[level]
+                # 记录亮度
                 if star in brightness_rules and branch in brightness_rules[star]:
                     p["star_brightness"][star] = brightness_rules[star][branch]
 
@@ -398,12 +476,17 @@ class ZiweiCoreEngine:
         self._arrange_boshi_twelve_spirits(yin_yang_gender)
         self._arrange_suiqian_twelve_spirits(self.year_branch)
         self._arrange_xiao_xian(yin_yang_gender, life_branch, birth_year, target_year)
+        
+        shen_gong_branch = self._calculate_shen_gong(life_branch)
+        # 补充丙级星与主星
+        self._arrange_c_level_stars(life_branch, shen_gong_branch)
         self._calculate_star_brightness()
         
+        ming_zhu, shen_zhu = self._arrange_master_stars(life_branch)
+
         # 4. 计算格局 (天纪派 7级标准优化版)
         patterns = self._calculate_patterns()
         
-        shen_gong_branch = self._calculate_shen_gong(life_branch)
         shen_gong_name = self.palaces[shen_gong_branch]["name"]
         
         self.meta = {
@@ -413,6 +496,8 @@ class ZiweiCoreEngine:
             "yin_yang_gender": yin_yang_gender,
             "shen_gong": f"{self.palaces[shen_gong_branch]['stem']}{shen_gong_branch}",
             "shen_gong_palace": shen_gong_name,
+            "ming_zhu": ming_zhu,
+            "shen_zhu": shen_zhu,
             "patterns": patterns
         }
         
