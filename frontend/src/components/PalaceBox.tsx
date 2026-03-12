@@ -19,6 +19,7 @@ export interface PalaceData {
     shen_sha?: string[];
     // Newly added for Time-Series logic
     dayun?: string;
+    palace_score?: number;
 }
 
 interface PalaceBoxProps {
@@ -86,6 +87,17 @@ export const PalaceBox = React.memo(function PalaceBox({ data, isActive, classNa
                 className
             )}
         >
+            {/* Score Badge (Quantified Palace Power) */}
+            {data.palace_score !== undefined && (
+                <div className={cn(
+                    "absolute top-0 left-0 px-1.5 py-0.5 rounded-br-lg text-[9px] md:text-[10px] font-bold z-30 shadow-sm border-r border-b",
+                    data.palace_score >= 10 ? "bg-emerald-600/20 text-emerald-400 border-emerald-500/30" :
+                    data.palace_score >= 0  ? "bg-zinc-800/50 text-zinc-400 border-zinc-700/50" :
+                                              "bg-rose-600/20 text-rose-400 border-rose-500/30"
+                )}>
+                    {data.palace_score > 0 ? `+${data.palace_score}` : data.palace_score}
+                </div>
+            )}
             {/* Top: Stars (Right to Left layout natively using flex-row-reverse) */}
             <div className="flex flex-row-reverse flex-wrap gap-x-1 md:gap-x-[5px] gap-y-1 items-start w-full h-auto overflow-hidden">
                 {allStars.map((star, idx) => {

@@ -36,8 +36,8 @@ class ZiweiCoreEngine:
             bz: {
                 "branch": bz, "stem": "", "name": "", "major_stars": [], 
                 "minor_stars": [], "c_stars": [], "transformations": [], "dayun": "",
-                "boshi_spirit": "", "suiqian_spirit": "", "star_brightness": {}, 
-                "xiao_xian": ""
+                "boshi_spirit": "", "suiqian_spirit": "", "changsheng_spirit": "", 
+                "star_brightness": {}, "xiao_xian": ""
             } 
             for bz in DIZHI
         }
@@ -148,6 +148,22 @@ class ZiweiCoreEngine:
         huo_base, ling_base = huo_ling_start.get(self.year_branch, ("丑", "卯"))
         self.palaces[DIZHI[(get_branch_index(huo_base) + hour_idx) % 12]]["minor_stars"].append("火星")
         self.palaces[DIZHI[(get_branch_index(ling_base) + hour_idx) % 12]]["minor_stars"].append("铃星")
+
+    def _calculate_nayin(self) -> str:
+        """计算六十花甲子纳音 (PDF Page 13)"""
+        nayin_map = {
+            "甲子": "海中金", "乙丑": "海中金", "丙寅": "炉中火", "丁卯": "炉中火", "戊辰": "大林木", "己巳": "大林木",
+            "庚午": "路旁土", "辛未": "路旁土", "壬申": "剑锋金", "癸酉": "剑锋金", "甲戌": "山头火", "乙亥": "山头火",
+            "丙子": "涧下水", "丁丑": "涧下水", "戊寅": "城头土", "己卯": "城头土", "庚辰": "白镴金", "辛巳": "白镴金",
+            "壬午": "杨柳木", "癸未": "杨柳木", "甲申": "井泉水", "乙酉": "井泉水", "丙戌": "屋上土", "丁亥": "屋上土",
+            "戊子": "霹雳火", "己丑": "霹雳火", "庚寅": "松柏木", "辛卯": "松柏木", "壬辰": "长流水", "癸巳": "长流水",
+            "甲午": "沙中金", "乙未": "沙中金", "丙申": "山下火", "丁酉": "山下火", "戊戌": "平地木", "己亥": "平地木",
+            "庚子": "壁上土", "辛丑": "壁上土", "壬寅": "金箔金", "癸卯": "金箔金", "甲辰": "覆灯火", "乙巳": "覆灯火",
+            "丙午": "天河水", "丁未": "天河水", "戊申": "大驿土", "己酉": "大驿土", "庚戌": "钗钏金", "辛亥": "钗钏金",
+            "壬子": "桑拓木", "癸丑": "桑拓木", "甲寅": "大溪水", "乙卯": "大溪水", "丙辰": "沙中土", "丁巳": "沙中土",
+            "戊午": "天上火", "己未": "天上火", "庚申": "石榴木", "辛酉": "石榴木", "壬戌": "大海水", "癸亥": "大海水"
+        }
+        return nayin_map.get(f"{self.year_stem}{self.year_branch}", "未知")
 
     def _arrange_four_transformations(self):
         """安四化：紫微斗数天干四化"""
@@ -360,73 +376,136 @@ class ZiweiCoreEngine:
         sg_idx = get_branch_index(shengong_branch)
         self.palaces[DIZHI[(sg_idx + yb_idx) % 12]]["c_stars"].append("天寿")
 
-        # 6. 旬空 (旬中空亡)
-        # 根据六十甲子旬算：甲子旬空戌亥，甲戌旬空申酉...
+        # 6. 三台、八座 (由左辅右弼起生日)
+        zf_p = next((p for p in self.palaces.values() if "左辅" in p["minor_stars"]), None)
+        yb_p = next((p for p in self.palaces.values() if "右弼" in p["minor_stars"]), None)
+        if zf_p and yb_p:
+            self.palaces[DIZHI[(get_branch_index(zf_p["branch"]) + self.day - 1) % 12]]["c_stars"].append("三台")
+            self.palaces[DIZHI[(get_branch_index(yb_p["branch"]) - (self.day - 1) + 12) % 12]]["c_stars"].append("八座")
+
+        # 7. 恩光、天贵 (由文昌文曲起生日)
+        wc_p = next((p for p in self.palaces.values() if "文昌" in p["minor_stars"]), None)
+        wq_p = next((p for p in self.palaces.values() if "文曲" in p["minor_stars"]), None)
+        if wc_p and wq_p:
+            self.palaces[DIZHI[(get_branch_index(wc_p["branch"]) + self.day - 2 + 12) % 12]]["c_stars"].append("恩光")
+            self.palaces[DIZHI[(get_branch_index(wq_p["branch"]) + self.day - 2 + 12) % 12]]["c_stars"].append("天贵")
+
+        # 8. 台辅、封诰 (时系)
+        hour_idx = get_branch_index(self.hour_branch)
+        self.palaces[DIZHI[(get_branch_index("午") + hour_idx) % 12]]["c_stars"].append("台辅")
+        self.palaces[DIZHI[(get_branch_index("寅") + hour_idx) % 12]]["c_stars"].append("封诰")
+
+        # 9. 天巫、天月、阴煞 (月系 PDF Page 20)
+        tianwu_loop = ["巳", "申", "寅", "亥"]
+        self.palaces[tianwu_loop[(self.month_num - 1) % 4]]["c_stars"].append("天巫")
+        tianyue_map = {1:"戌",2:"巳",3:"辰",4:"寅",5:"未",6:"卯",7:"亥",8:"未",9:"寅",10:"午",11:"戌",12:"寅"}
+        self.palaces[tianyue_map[self.month_num]]["c_stars"].append("天月")
+        yinsha_loop = ["寅", "子", "戌", "申", "午", "辰"]
+        self.palaces[yinsha_loop[(self.month_num - 1) % 6]]["c_stars"].append("阴煞")
+
+        # 10. 旬空与截空
         ys_idx = get_stem_index(self.year_stem)
         start_idx = (yb_idx - ys_idx + 12) % 12
-        xun_kong_1 = DIZHI[(start_idx - 2 + 12) % 12]
-        xun_kong_2 = DIZHI[(start_idx - 1 + 12) % 12]
-        self.palaces[xun_kong_1]["c_stars"].append("旬空")
-        self.palaces[xun_kong_2]["c_stars"].append("旬空")
+        self.palaces[DIZHI[(start_idx - 2 + 12) % 12]]["c_stars"].append("旬空")
 
-        # 7. 截空 (截路空亡)
         jiekong_map = {"甲":"申酉","己":"申酉","乙":"午未","庚":"午未","丙":"辰巳","辛":"辰巳","丁":"寅卯","壬":"寅卯","戊":"子丑","癸":"子丑"}
         res = jiekong_map.get(self.year_stem, "")
         for char in res:
             self.palaces[char]["c_stars"].append("截空")
+
+    def _arrange_changsheng_12_spirits(self, ju: int, yin_yang_gender: str):
+        """安五行长生十二神 (PDF Page 16)"""
+        spirits = ["长生", "沐浴", "冠带", "临官", "帝旺", "衰", "病", "死", "墓", "绝", "胎", "养"]
+        start_map = {2: "申", 3: "亥", 4: "巳", 5: "申", 6: "寅"}
+        start_idx = get_branch_index(start_map[ju])
+        is_shun = (yin_yang_gender == "阳男" or yin_yang_gender == "阴女")
+        
+        for i in range(12):
+            target_idx = (start_idx + i) % 12 if is_shun else (start_idx - i + 12) % 12
+            # 复用原本存储神煞的字段，或者这里直接加到 palaces 字典新 key
+            self.palaces[DIZHI[target_idx]]["changsheng_spirit"] = spirits[i]
 
     def _arrange_master_stars(self, life_branch: str):
         """安命主与身主 (PDF Page 21)"""
         ming_zhu_map = {"子":"贪狼","丑":"巨门","寅":"禄存","卯":"文曲","辰":"廉贞","巳":"武曲","午":"破军","未":"武曲","申":"廉贞","酉":"文曲","戌":"禄存","亥":"巨门"}
         shen_zhu_map = {"子":"火星","丑":"天相","寅":"天梁","卯":"天同","辰":"文昌","巳":"天机","午":"火星","未":"天相","申":"天梁","酉":"天同","戌":"文昌","亥":"天机"}
         return ming_zhu_map[life_branch], shen_zhu_map[self.year_branch]
-        """设定简单的主星庙旺平陷状态 (MVP版本，仅取几个典型)"""
-        brightness_rules = {
-            "紫微": {"子": "平", "丑": "平", "寅": "旺", "卯": "旺", "辰": "平", "巳": "旺", "午": "庙", "未": "庙", "申": "平", "酉": "旺", "戌": "得", "亥": "旺"},
-            "太阳": {"子": "陷", "丑": "平", "寅": "旺", "卯": "庙", "辰": "平", "巳": "旺", "午": "旺", "未": "得", "申": "平", "酉": "平", "戌": "不", "亥": "陷"},
-            "太阴": {"子": "庙", "丑": "平", "寅": "旺", "卯": "陷", "辰": "平", "巳": "陷", "午": "不", "未": "不", "申": "平", "酉": "旺", "戌": "旺", "亥": "庙"},
-            "武曲": {"子": "旺", "丑": "平", "寅": "得", "卯": "利", "辰": "平", "巳": "平", "午": "旺", "未": "庙", "申": "平", "酉": "利", "戌": "庙", "亥": "平"},
-            "天同": {"子": "旺", "丑": "平", "寅": "利", "卯": "平", "辰": "平", "巳": "庙", "午": "陷", "未": "不", "申": "平", "酉": "平", "戌": "平", "亥": "庙"},
-            "七杀": {"子": "平", "丑": "庙", "寅": "庙", "卯": "旺", "辰": "平", "巳": "平", "午": "平", "未": "庙", "申": "平", "酉": "旺", "戌": "庙", "亥": "平"},
-            "贪狼": {"子": "旺", "丑": "平", "寅": "平", "卯": "利", "辰": "平", "巳": "陷", "午": "旺", "未": "庙", "申": "平", "酉": "利", "戌": "庙", "亥": "陷"},
-            "巨门": {"子": "旺", "丑": "平", "寅": "庙", "卯": "庙", "辰": "平", "巳": "旺", "午": "平", "未": "不", "申": "平", "酉": "庙", "戌": "陷", "亥": "旺"},
-            "天机": {"子": "庙", "丑": "庙", "寅": "得", "卯": "旺", "辰": "平", "巳": "平", "午": "庙", "未": "陷", "申": "平", "酉": "旺", "戌": "利", "亥": "平"},
-            "廉贞": {"子": "平", "丑": "平", "寅": "庙", "卯": "平", "辰": "平", "巳": "陷", "午": "平", "未": "利", "申": "平", "酉": "平", "戌": "利", "亥": "陷"},
-            "天府": {"子": "庙", "丑": "平", "寅": "庙", "卯": "得", "辰": "平", "巳": "得", "午": "旺", "未": "庙", "申": "平", "酉": "旺", "戌": "庙", "亥": "得"},
-            "天梁": {"子": "庙", "丑": "平", "寅": "庙", "卯": "庙", "辰": "平", "巳": "陷", "午": "平", "未": "旺", "申": "平", "酉": "得", "戌": "庙", "亥": "陷"},
-            "天相": {"子": "庙", "丑": "平", "寅": "庙", "卯": "陷", "辰": "平", "巳": "得", "午": "庙", "未": "得", "申": "平", "酉": "陷", "戌": "得", "亥": "得"},
-            "破军": {"子": "庙", "丑": "平", "寅": "得", "卯": "陷", "辰": "平", "巳": "平", "午": "庙", "未": "旺", "申": "得", "酉": "陷", "戌": "旺", "亥": "平"},
-            "文昌": {"子": "得", "丑": "庙", "寅": "陷", "卯": "利", "辰": "平", "巳": "庙", "午": "陷", "未": "利", "申": "得", "酉": "庙", "戌": "陷", "亥": "利"},
-            "文曲": {"子": "得", "丑": "庙", "寅": "平", "卯": "旺", "辰": "平", "巳": "庙", "午": "陷", "未": "旺", "申": "得", "酉": "庙", "戌": "陷", "亥": "旺"},
-            "左辅": {"子": "庙", "丑": "庙", "寅": "庙", "卯": "得", "辰": "庙", "巳": "得", "午": "庙", "未": "庙", "申": "得", "酉": "庙", "戌": "庙", "亥": "得"},
-            "右弼": {"子": "庙", "丑": "庙", "寅": "庙", "卯": "得", "辰": "庙", "巳": "得", "午": "庙", "未": "庙", "申": "得", "酉": "庙", "戌": "庙", "亥": "得"},
-            "擎羊": {"子": "陷", "丑": "庙", "寅": "平", "卯": "陷", "辰": "平", "巳": "平", "午": "陷", "未": "庙", "申": "平", "酉": "陷", "戌": "庙", "亥": "平"},
-            "陀罗": {"子": "平", "丑": "庙", "寅": "陷", "卯": "平", "辰": "庙", "巳": "陷", "午": "平", "未": "平", "申": "平", "酉": "平", "戌": "庙", "亥": "平"},
-            "火星": {"子": "陷", "丑": "平", "寅": "庙", "卯": "利", "辰": "平", "巳": "得", "午": "平", "未": "利", "申": "平", "酉": "得", "戌": "庙", "亥": "利"},
-            "铃星": {"子": "陷", "丑": "平", "寅": "庙", "卯": "利", "辰": "平", "巳": "得", "午": "平", "未": "利", "申": "平", "酉": "得", "戌": "庙", "亥": "利"},
-            "禄存": {"子": "平", "丑": "平", "寅": "庙", "卯": "庙", "辰": "平", "巳": "庙", "午": "庙", "未": "平", "申": "平", "酉": "庙", "戌": "平", "亥": "庙"},
-            "天魁": {"子": "庙", "丑": "庙", "寅": "庙", "卯": "庙", "辰": "庙", "巳": "庙", "午": "庙", "未": "庙", "申": "庙", "酉": "庙", "戌": "庙", "亥": "庙"},
-            "天钺": {"子": "庙", "丑": "庙", "寅": "庙", "卯": "庙", "辰": "庙", "巳": "庙", "午": "庙", "未": "庙", "申": "庙", "酉": "庙", "戌": "庙", "亥": "庙"},
-            "天马": {"子": "平", "丑": "平", "寅": "旺", "卯": "得", "辰": "平", "巳": "旺", "午": "得", "未": "平", "申": "旺", "酉": "得", "戌": "平", "亥": "旺"},
-            "红鸾": {"子": "得", "丑": "平", "寅": "平", "卯": "旺", "辰": "得", "巳": "平", "午": "平", "未": "平", "申": "平", "酉": "得", "戌": "平", "亥": "得"},
-            "天喜": {"子": "得", "丑": "平", "寅": "平", "卯": "得", "辰": "得", "巳": "平", "午": "平", "未": "平", "申": "平", "酉": "旺", "戌": "平", "亥": "得"},
-            "天姚": {"子": "得", "丑": "陷", "寅": "平", "卯": "旺", "辰": "平", "巳": "平", "午": "旺", "未": "陷", "申": "平", "酉": "得", "戌": "陷", "亥": "得"},
-            "咸池": {"子": "陷", "丑": "庙", "寅": "陷", "卯": "陷", "辰": "庙", "巳": "陷", "午": "陷", "未": "庙", "申": "陷", "酉": "陷", "戌": "庙", "亥": "陷"},
-            "地空": {"子": "陷", "丑": "陷", "寅": "陷", "卯": "陷", "辰": "陷", "巳": "陷", "午": "陷", "未": "陷", "申": "陷", "酉": "陷", "戌": "陷", "亥": "庙"},
-            "地劫": {"子": "庙", "丑": "陷", "寅": "陷", "卯": "陷", "辰": "陷", "巳": "陷", "午": "陷", "未": "陷", "申": "陷", "酉": "陷", "戌": "陷", "亥": "陷"}
-        }
+
+    def _calculate_star_brightness(self):
+        """计算星曜庙旺平陷逻辑 (外部 JSON 驱动)"""
+        import json
+        import os
+        
+        # 尝试从外部文件加载 rules，若失败则回退至硬编码
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        rules_path = os.path.join(current_dir, "..", "brightness_rules_utf8.json")
+        brightness_rules = {}
+        if os.path.exists(rules_path):
+            try:
+                with open(rules_path, "r", encoding="utf-8") as f:
+                    brightness_rules = json.load(f)
+            except Exception:
+                 pass
+        
+        if not brightness_rules:
+            # 硬编码兜底 (仅包含部分示例)
+            brightness_rules = {
+                "紫微": {"子": "平", "丑": "平", "寅": "旺", "卯": "旺", "辰": "平", "巳": "旺", "午": "庙", "未": "庙", "申": "平", "酉": "旺", "戌": "得", "亥": "旺"},
+            }
 
         for p in self.palaces.values():
             branch = p["branch"]
-            # 合并所有星曜计算亮度
-            all_stars = [("甲", s) for s in p["major_stars"]] + \
-                        [("乙", s) for s in p["minor_stars"]] + \
-                        [("丙", s) for s in p["c_stars"]]
-            
-            for level, star in all_stars:
-                # 记录亮度
+            # 合并所有星曜
+            all_stars = p["major_stars"] + p["minor_stars"] + p["c_stars"]
+            for star in all_stars:
                 if star in brightness_rules and branch in brightness_rules[star]:
                     p["star_brightness"][star] = brightness_rules[star][branch]
+
+    def _calculate_palace_weights(self):
+        """
+        计算宫位综合权重评分 (Normalized 0-100)
+        1. 基础星曜量级 (60%)
+        2. 亮度修正 (20%)
+        3. 四化加持/减损 (20%)
+        """
+        base_weights = {
+            "major": 12.0,  # 14主星
+            "minor": 6.0,   # 六吉六煞
+            "c_level": 1.5  # 丙级星
+        }
+        
+        brightness_mod = {"庙": 1.25, "旺": 1.15, "得": 1.05, "利": 1.0, "平": 0.9, "不": 0.7, "陷": 0.5}
+        transformation_mod = {"化禄": 4.0, "化权": 3.0, "化科": 2.5, "化忌": -5.0}
+
+        for p in self.palaces.values():
+            raw_score = 15.0  # 基础分
+            
+            # 1. 计算星曜能量
+            for s in p.get("major_stars", []):
+                mod = brightness_mod.get(p["star_brightness"].get(s, "平"), 1.0)
+                raw_score += base_weights["major"] * mod
+                
+            for s in p.get("minor_stars", []):
+                mod = brightness_mod.get(p["star_brightness"].get(s, "平"), 1.0)
+                # 煞星（羊陀火铃劫空）赋予负面影响
+                if s in ["擎羊", "陀罗", "火星", "铃星", "地劫", "地空"]:
+                    raw_score -= base_weights["minor"] * (1.5 - mod)
+                else:
+                    raw_score += base_weights["minor"] * mod
+
+            for s in p.get("c_stars", []):
+                raw_score += base_weights["c_level"]
+
+            # 2. 四化叠加
+            for t in p.get("transformations", []):
+                for key, val in transformation_mod.items():
+                    if key in t:
+                        raw_score += val
+            
+            # 3. 归一化处理 (映射到 0-100)
+            # 假设一个中等合理的满负荷分数在 55 左右
+            final_score = int(max(5, min(100, (raw_score / 55.0) * 100)))
+            p["palace_score"] = final_score
 
     def _calculate_patterns(self) -> list:
         """根据 7 级亮度标准和星曜组合判定典型格局 (倪师重点强调)"""
@@ -436,7 +515,18 @@ class ZiweiCoreEngine:
         ming = palaces_by_name.get("命宫", {})
         guan = palaces_by_name.get("官禄宫", {})
         cai = palaces_by_name.get("财帛宫", {})
+        qian = palaces_by_name.get("迁移宫", {})
         
+        san_fang_si_zheng = [ming, guan, cai, qian]
+        
+        # 提取三方四正所有星曜和四化
+        all_stars = set()
+        all_trans = []
+        for p in san_fang_si_zheng:
+            all_stars.update(p.get("major_stars", []))
+            all_stars.update(p.get("minor_stars", []))
+            all_trans.extend(p.get("transformations", []))
+
         # 1. 日丽中天 (太阳在午且非陷/不)
         if "太阳" in ming.get("major_stars", []) and ming["branch"] == "午":
             if ming["star_brightness"].get("太阳") in ["庙", "旺"]:
@@ -451,7 +541,31 @@ class ZiweiCoreEngine:
         if "武曲" in ming.get("major_stars", []) and "天府" in ming.get("major_stars", []):
             patterns.append("武府同临格")
 
-        # 4. 这里的逻辑可以无限扩展... 
+        # 4. 石中隐玉 (巨门在子午坐命，见科禄权)
+        if "巨门" in ming.get("major_stars", []) and ming["branch"] in ["子", "午"]:
+            if any(t in "".join(all_trans) for t in ["化禄", "化权", "化科"]):
+                patterns.append("石中隐玉格")
+
+        # 5. 机月同梁 (天机 太阴 天同 天梁 聚三方)
+        jt_stars = {"天机", "太阴", "天同", "天梁"}
+        if jt_stars.issubset(all_stars):
+            patterns.append("机月同梁格")
+
+        # 6. 雄宿朝垣 (廉贞在寅申坐命)
+        if "廉贞" in ming.get("major_stars", []) and ming["branch"] in ["寅", "申"]:
+            if ming["star_brightness"].get("廉贞") in ["庙", "利", "平"]:
+                patterns.append("雄宿朝垣格")
+
+        # 7. 英星入庙 (破军在子午坐命)
+        if "破军" in ming.get("major_stars", []) and ming["branch"] in ["子", "午"]:
+            if ming["star_brightness"].get("破军") == "庙":
+                patterns.append("英星入庙格")
+
+        # 8. 杀破狼 (七杀 破军 贪狼 聚三方)
+        spl_stars = {"七杀", "破军", "贪狼"}
+        if spl_stars.issubset(all_stars):
+            patterns.append("杀破狼格")
+
         return patterns
 
     def generate_chart(self, birth_year: int = 1990, target_year: int = 2026) -> Dict[str, Any]:
@@ -473,14 +587,17 @@ class ZiweiCoreEngine:
         self._calculate_dayun(wuxing_ju_num, yin_yang_gender, life_branch)
         self._arrange_boshi_twelve_spirits(yin_yang_gender)
         self._arrange_suiqian_twelve_spirits(self.year_branch)
+        self._arrange_changsheng_12_spirits(wuxing_ju_num, yin_yang_gender)
         self._arrange_xiao_xian(yin_yang_gender, life_branch, birth_year, target_year)
         
         shen_gong_branch = self._calculate_shen_gong(life_branch)
         # 补充丙级星与主星
         self._arrange_c_level_stars(life_branch, shen_gong_branch)
         self._calculate_star_brightness()
+        self._calculate_palace_weights()
         
         ming_zhu, shen_zhu = self._arrange_master_stars(life_branch)
+        nayin = self._calculate_nayin()
 
         # 4. 计算格局 (天纪派 7级标准优化版)
         patterns = self._calculate_patterns()
@@ -490,6 +607,7 @@ class ZiweiCoreEngine:
         self.meta = {
             "life_palace": f"{life_stem}{life_branch}",
             "wuxing_ju": WUXING_JU[wuxing_ju_num],
+            "nayin": nayin, 
             "ziwei_position": ziwei_branch,
             "yin_yang_gender": yin_yang_gender,
             "shen_gong": f"{self.palaces[shen_gong_branch]['stem']}{shen_gong_branch}",
@@ -507,11 +625,12 @@ if __name__ == "__main__":
     engine = ZiweiCoreEngine(year_stem="甲", year_branch="子", month_leap_num=1, day=15, hour_branch="子", gender="男")
     chart = engine.generate_chart()
     
-    print("【天纪版 高阶紫微全盘打印 (包含辅星/四化)】")
+    print("【天纪版 高阶紫微全盘打印 (包含权重评分/辅星/四化)】")
     print(f"命宫: {chart['meta']['life_palace']} | 局数: {chart['meta']['wuxing_ju']} | 紫微星: {chart['meta']['ziwei_position']}")
-    print("=" * 80)
+    print("=" * 100)
     for p in chart['palaces']:
         ms = ",".join(p['major_stars']) if p['major_stars'] else "无"
         mins = ",".join(p['minor_stars']) if p['minor_stars'] else "无"
         trans = ",".join(p['transformations']) if p['transformations'] else ""
-        print(f"[{p['stem']}{p['branch']}宫] {p['name'].ljust(4, '　')} | 大运: {p['dayun'].ljust(5)} | 主: {ms.ljust(8, '　')} | 辅: {mins.ljust(15, '　')} | {trans}")
+        score = p.get('palace_score', 0)
+        print(f"[{p['stem']}{p['branch']}宫] {p['name'].ljust(4, '　')} | 分数: {str(score).ljust(3)} | 大运: {p['dayun'].ljust(5)} | 主: {ms.ljust(8, '　')} | 辅: {mins.ljust(15, '　')} | {trans}")

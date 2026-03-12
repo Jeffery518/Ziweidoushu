@@ -72,6 +72,7 @@ export function calculateChartStats(palaces: Array<{
   transformations: string[];
   star_brightness?: Record<string, string>;
   branch: string;
+  palace_score?: number;
 }>): ChartStats {
   let totalLucky = 0, totalUnlucky = 0, totalNeutral = 0;
   const wuxingCounts: Record<string, number> = { '金': 0, '木': 0, '水': 0, '火': 0, '土': 0 };
@@ -88,32 +89,36 @@ export function calculateChartStats(palaces: Array<{
 
     // 仅对关键宫位评分
     if (KEY_PALACES.includes(p.name)) {
-      let score = 30; // 基础分
+      let score = 0;
 
-      // 主星亮度得分 (max 40)
-      let brightnessTotal = 0;
-      for (const star of p.major_stars) {
-        const bri = p.star_brightness?.[star] ?? '';
-        brightnessTotal += BRIGHTNESS_SCORE[bri] ?? 5;
-      }
-      score += Math.min(40, p.major_stars.length > 0 ? Math.round(brightnessTotal / p.major_stars.length * 4) : 20);
-
-      // 吉凶星加持 (max 30)
-      let luckBonus = 0;
-      for (const star of p.minor_stars) {
-        if (LUCKY_STARS.has(star)) luckBonus += 6;
-        if (UNLUCKY_STARS.has(star)) luckBonus -= 8;
-      }
-      score += Math.max(-20, Math.min(30, luckBonus));
-
-      // 四化影响 (max 30)
-      let sihuaBonus = 0;
-      for (const t of p.transformations) {
-        for (const [key, val] of Object.entries(SIHUA_SCORE)) {
-          if (t.includes(key.replace('化',''))) sihuaBonus += val;
+      if (p.palace_score !== undefined) {
+        // 优先使用后端计算的权重分
+        score = p.palace_score;
+      } else {
+        // 前端兜底计算逻辑
+        score = 30; // 基础分
+        let brightnessTotal = 0;
+        for (const star of p.major_stars) {
+          const bri = p.star_brightness?.[star] ?? '';
+          brightnessTotal += BRIGHTNESS_SCORE[bri] ?? 5;
         }
+        score += Math.min(40, p.major_stars.length > 0 ? Math.round(brightnessTotal / p.major_stars.length * 4) : 20);
+
+        let luckBonus = 0;
+        for (const star of p.minor_stars) {
+          if (LUCKY_STARS.has(star)) luckBonus += 6;
+          if (UNLUCKY_STARS.has(star)) luckBonus -= 8;
+        }
+        score += Math.max(-20, Math.min(30, luckBonus));
+
+        let sihuaBonus = 0;
+        for (const t of p.transformations) {
+          for (const [key, val] of Object.entries(SIHUA_SCORE)) {
+            if (t.includes(key.replace('化',''))) sihuaBonus += val;
+          }
+        }
+        score += Math.max(-20, Math.min(30, sihuaBonus));
       }
-      score += Math.max(-20, Math.min(30, sihuaBonus));
 
       score = Math.max(10, Math.min(100, score));
 

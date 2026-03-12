@@ -168,10 +168,20 @@ def generate_ziwei_chart(req: ChartRequestDTO):
             "level": "核心元神",
             "info": f"命主：{chart_data['meta'].get('ming_zhu')}，身主：{chart_data['meta'].get('shen_zhu')}"
         })
+        
         if chart_data['meta'].get('patterns'):
+            patterns_info = []
+            for p_name in chart_data['meta']['patterns']:
+                if p_name in NISHI_KNOWLEDGE.get("patterns_interpretation", {}):
+                    p_info = NISHI_KNOWLEDGE["patterns_interpretation"][p_name]
+                    patterns_info.append(f"【{p_name}】: {p_info.get('nishi_quote')}")
+                else:
+                    patterns_info.append(p_name)
+            
             rag_context.append({
                 "level": "先天格局",
-                "info": f"检测到特殊格局：{', '.join(chart_data['meta']['patterns'])}"
+                "star": "格局大象",
+                "quote": " | ".join(patterns_info) if patterns_info else "检测到特殊格局，但暂无深度解读。"
             })
 
         # 统计计数
