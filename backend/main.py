@@ -122,7 +122,7 @@ def generate_ziwei_chart(req: ChartRequestDTO):
             f"农历 {lunar.getYearInGanZhi()}年 {lunar.getMonthInChinese()}月 {lunar.getDayInChinese()}"
         )
 
-        # RAG 知识融合
+        # RAG 知识融合 (根据 7 级标准智能匹配)
         life_palace_branch = chart_data['meta']['life_palace'][-1]
         life_palace_data   = next((p for p in chart_data['palaces'] if p['branch'] == life_palace_branch), None)
         rag_context = []
@@ -130,9 +130,25 @@ def generate_ziwei_chart(req: ChartRequestDTO):
             for star in life_palace_data['major_stars']:
                 if star in NISHI_KNOWLEDGE.get("stars_interpretation", {}):
                     knowledge = NISHI_KNOWLEDGE["stars_interpretation"][star]
-                    if "命宫" in knowledge.get("palaces", {}):
-                        quote = knowledge["palaces"]["命宫"].get("nishi_quote", "")
-                        rag_context.append({"star": star, "quote": quote})
+                    brightness = life_palace_data['star_brightness'].get(star, "平")
+                    
+                    # 优先匹配具体宫位+亮度，例如 "午_庙"
+                    # 同时也支持通用 "命宫" 解读
+                    specific_key = f"{life_palace_data['branch']}_{brightness}"
+                    
+                    results = []
+                    # 1. 尝试匹配具体位置亮度
+                    if specific_key in knowledge.get("palaces", {}):
+                        results.append(knowledge["palaces"][specific_key].get("nishi_quote", ""))
+                    # 2. 尝试模糊匹配 (将 '不' 映射给 '陷' 处理，如果知识库没更新)
+                    elif brightness in ["陷", "不"] and f"{life_palace_data['branch']}_陷" in knowledge.get("palaces", {}):
+                        results.append(knowledge["palaces"][f"{life_palace_data['branch']}_陷"].get("nishi_quote", ""))
+                    # 3. 兜底命宫通用解读
+                    elif "命宫" in knowledge.get("palaces", {}):
+                        results.append(knowledge["palaces"]["命宫"].get("nishi_quote", ""))
+                    
+                    for quote in results:
+                        if quote: rag_context.append({"star": star, "quote": quote})
 
         # 统计计数
         _increment_chart_count()
@@ -140,6 +156,7 @@ def generate_ziwei_chart(req: ChartRequestDTO):
         return {
             "status": "success",
             "data": chart_data,
+            "patterns": chart_data['meta'].get('patterns', []),
             "rag_context": rag_context,
             "system_prompt": NISHI_KNOWLEDGE.get("system_prompt_template", "")
         }
