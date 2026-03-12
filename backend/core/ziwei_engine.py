@@ -8,7 +8,7 @@ DIZHI = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "
 
 PALACES_ORDER = [
     "命宫", "兄弟宫", "夫妻宫", "子女宫", "财帛宫", "疾厄宫", 
-    "迁移宫", "交友宫", "官禄宫", "田宅宫", "福德宫", "父母宫"
+    "迁移宫", "交友宫", "事业宫", "田宅宫", "福德宫", "父母宫"
 ]
 
 WUXING_JU = {2: "水二局", 3: "木三局", 4: "金四局", 5: "土五局", 6: "火六局"}
@@ -16,11 +16,11 @@ WUXING_JU = {2: "水二局", 3: "木三局", 4: "金四局", 5: "土五局", 6: 
 def get_stem_index(stem: str) -> int: return TIANGAN.index(stem)
 def get_branch_index(branch: str) -> int: return DIZHI.index(branch)
 
-# 星曜权重等级
-STAR_WEIGHTS = {
-    "甲": 100, # 主星
-    "乙": 40,  # 辅星/煞星
-    "丙": 10,  # 杂曜/神煞
+# 星曜等级定义 (仅用于分类，不涉及评分)
+STAR_LEVELS = {
+    "甲": "主星",
+    "乙": "辅星",
+    "丙": "杂曜",
 }
 
 class ZiweiCoreEngine:
@@ -37,7 +37,7 @@ class ZiweiCoreEngine:
                 "branch": bz, "stem": "", "name": "", "major_stars": [], 
                 "minor_stars": [], "c_stars": [], "transformations": [], "dayun": "",
                 "boshi_spirit": "", "suiqian_spirit": "", "star_brightness": {}, 
-                "xiao_xian": "", "star_weights": {}
+                "xiao_xian": ""
             } 
             for bz in DIZHI
         }
@@ -418,14 +418,12 @@ class ZiweiCoreEngine:
 
         for p in self.palaces.values():
             branch = p["branch"]
-            # 合并所有星曜计算权重与亮度
+            # 合并所有星曜计算亮度
             all_stars = [("甲", s) for s in p["major_stars"]] + \
                         [("乙", s) for s in p["minor_stars"]] + \
                         [("丙", s) for s in p["c_stars"]]
             
             for level, star in all_stars:
-                # 记录权重
-                p["star_weights"][star] = STAR_WEIGHTS[level]
                 # 记录亮度
                 if star in brightness_rules and branch in brightness_rules[star]:
                     p["star_brightness"][star] = brightness_rules[star][branch]
