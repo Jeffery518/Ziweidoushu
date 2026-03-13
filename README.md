@@ -24,22 +24,50 @@
 
 ## 🖼️ 界面展示 (UI Showcase)
 
-<table align="center">
+### 🌌 核心起盘与交互
+<div align="center">
+  <img src="图片/new_chart.png" width="85%" />
+  <p><b>专业十二宫排盘系统</b>：深空主题配色，逻辑严密，星官井然有序</p>
+</div>
+
+<br/>
+
+<table align="center" width="100%">
   <tr>
-    <td align="center"><img src="图片/new_chart.png" width="400px"/><br/><b>🔍 专业十二宫排盘</b></td>
-    <td align="center"><img src="图片/new_insight.png" width="400px"/><br/><b>🤖 大师批断洞见</b></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="图片/new_empty_state.png" width="400px"/><br/><b>🔮 初始未排盘状态</b></td>
-    <td align="center"><img src="图片/new_input_form.png" width="400px"/><br/><b>📝 智能排盘控制面板</b></td>
-  </tr>
-  <tr>
-    <td align="center" colspan="2"><img src="图片/new_intro.png" width="600px"/><br/><b>💬 天纪文化与原由介绍</b></td>
-  </tr>
-  <tr>
-    <td align="center" colspan="2"><img src="图片/832cbcbedd32e79f0fa9f4173187f0c6.png" width="800px"/><br/><b>📱 排版效果展示</b></td>
+    <td align="center" width="50%">
+      <img src="图片/new_input_form.png" width="95%"/>
+      <br/><b>📝 智能排盘控制中心</b>
+    </td>
+    <td align="center" width="50%">
+      <img src="图片/new_empty_state.png" width="95%"/>
+      <br/><b>🔮 系统初始状态</b>
+    </td>
   </tr>
 </table>
+
+<br/>
+
+### 🤖 智能洞见与移动端适配
+<div align="center">
+  <img src="图片/new_insight.png" width="85%" />
+  <p><b>大师级批断洞见</b>：结合倪师理论，自动化分析命局强弱与运势引导</p>
+</div>
+
+<br/>
+
+<div align="center">
+  <img src="图片/832cbcbedd32e79f0fa9f4173187f0c6.png" width="85%" />
+  <p><b>📱 全设备自适应</b>：极致排版，确保移动端呈现同样专业的观感</p>
+</div>
+
+<br/>
+
+<div align="center">
+  <img src="图片/new_intro.png" width="75%" />
+  <p><b>📜 传统文化科普</b>：内置详尽的《天纪》背景与学术导读</p>
+</div>
+
+<br/>
 
 ---
 
