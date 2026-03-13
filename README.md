@@ -63,7 +63,7 @@
 <br/>
 
 <div align="center">
-  <img src="图片/new_intro.png" width="75%" />
+  <img src="图片/new_input_form.png" width="75%" />
   <p><b>📜 传统文化科普</b>：内置详尽的《天纪》背景与学术导读</p>
 </div>
 
