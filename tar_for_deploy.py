@@ -27,6 +27,21 @@ def make_tarfile():
                 rel_path = os.path.relpath(full_path, local_path)
                 tar.add(full_path, arcname=rel_path)
 
+        # Include README and PDF (Source)
+        for extra in ["README.md", "倪海厦-天纪-天机道终稿(20100907非打印第一版）简体.pdf"]:
+            file_path = os.path.join(local_path, extra)
+            if os.path.exists(file_path):
+                tar.add(file_path, arcname=extra)
+
+        # Include Images directory
+        img_path = os.path.join(local_path, "图片")
+        if os.path.exists(img_path):
+            for root, dirs, files in os.walk(img_path):
+                for file in files:
+                    full_path = os.path.join(root, file)
+                    rel_path = os.path.relpath(full_path, local_path)
+                    tar.add(full_path, arcname=rel_path)
+
 if __name__ == "__main__":
     make_tarfile()
     print(f"Created {output_filename}")
