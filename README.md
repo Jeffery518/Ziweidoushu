@@ -26,18 +26,19 @@
 
 <table align="center">
   <tr>
-    <td align="center"><img src="图片/ScreenShot_2026-03-10_142858_299.png" width="400px"/><br/><b>🌌 信息汇总</b></td>
-    <td align="center"><img src="图片/ScreenShot_2026-03-10_142913_162.png" width="400px"/><br/><b>🤖 大师批断洞见</b></td>
+    <td align="center"><img src="图片/new_chart.png" width="400px"/><br/><b>🔍 专业十二宫排盘</b></td>
+    <td align="center"><img src="图片/new_insight.png" width="400px"/><br/><b>🤖 大师批断洞见</b></td>
   </tr>
   <tr>
-    <td align="center"><img src="图片/ScreenShot_2026-03-10_143035_922.png" width="400px"/><br/><b>🔮 未排盘</b></td>
-    <td align="center"><img src="图片/ScreenShot_2026-03-10_142926_911.png" width="400px"/><br/><b>🔍 专业十二宫排盘</b></td>
+    <td align="center"><img src="图片/new_empty_state.png" width="400px"/><br/><b>🔮 初始未排盘状态</b></td>
+    <td align="center"><img src="图片/new_input_form.png" width="400px"/><br/><b>📝 智能排盘控制面板</b></td>
   </tr>
   <tr>
-    <td align="center"><img src="图片/ScreenShot_2026-03-10_142957_743.png" width="400px"/><br/><b>详情介绍</b></td>
-    <td align="center"><img src="图片/ScreenShot_2026-03-10_143006_004.png" width="400px"/><br/><b>📝 排盘信息输入</b></td>
+    <td align="center" colspan="2"><img src="图片/new_intro.png" width="600px"/><br/><b>💬 天纪文化与原由介绍</b></td>
   </tr>
   <tr>
+    <td align="center" colspan="2"><img src="图片/832cbcbedd32e79f0fa9f4173187f0c6.png" width="800px"/><br/><b>📱 排版效果展示</b></td>
+  </tr>
 </table>
 
 ---
