@@ -37,7 +37,7 @@ export function TimeController({ startYear, currentYear, onYearChange, className
 
     return (
         <motion.div
-            initial={{ opacity: 0, y: -20 }}
+            initial={false}
             animate={{ opacity: 1, y: 0 }}
             className={cn(
                 "w-full flex flex-col items-start gap-4 md:gap-6 rounded-2xl p-4 md:p-6 backdrop-blur-2xl border shadow-lg",

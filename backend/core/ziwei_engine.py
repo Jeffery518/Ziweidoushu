@@ -438,7 +438,7 @@ class ZiweiCoreEngine:
         
         # 尝试从外部文件加载 rules，若失败则回退至硬编码
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        rules_path = os.path.join(current_dir, "..", "brightness_rules_utf8.json")
+        rules_path = os.path.join(current_dir, "brightness_rules.json")
         brightness_rules = {}
         if os.path.exists(rules_path):
             try:

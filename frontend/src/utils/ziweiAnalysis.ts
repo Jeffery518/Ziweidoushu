@@ -1,183 +1,45 @@
-export interface PalaceData {
-    branch: string;
-    name: string;
-    major_stars: string[];
-    minor_stars: string[];
-    transformations: string[];
-    star_brightness?: Record<string, string>;
-}
+export type { AnalysisItem };
 
-export interface ChartMeta {
-    life_palace: string;
-    wuxing_ju: string;
-    ziwei_position: string;
-    yin_yang_gender?: string;
-}
-
-export interface ZiweiChartData {
-    meta: ChartMeta;
-    palaces: PalaceData[];
-}
-
-export interface AnalysisItem {
+interface AnalysisItem {
     id: string;
-    type: "star" | "transformation" | "pattern" | "warning" | "info";
+    type: "star" | "pattern" | "transformation" | "info" | "warning";
     title: string;
     content: string;
-    level: "info" | "success" | "warning" | "destructive";
+    level: "success" | "info" | "warning" | "destructive";
 }
 
-export function analyzePalace(palace: PalaceData, _chart: ZiweiChartData): AnalysisItem[] {
+import type { ZiweiChartData } from "../components/ZiweiChart";
+import type { PalaceData } from "../components/PalaceBox";
+
+export function analyzePalace(palace: PalaceData, chart: ZiweiChartData): AnalysisItem[] {
     const items: AnalysisItem[] = [];
 
-    const hasStar = (name: string) => palace.major_stars.some(s => s.includes(name)) || palace.minor_stars.some(s => s.includes(name));
-    const isLifePalace = palace.name === "命宫";
+    // Helper routines
+    const getStars = (p: PalaceData) => [...p.major_stars, ...p.minor_stars];
+    const hasTrans = (p: PalaceData, t: string) => {
+        const trans = p.transformations || [];
+        // Handle both object-like {type, star} and string formats if any
+        return trans.some((x: any) => typeof x === 'string' ? x.includes(t) : x.type === t);
+    };
 
-    // 1. 十四主星论断 (基于倪海厦《天纪》)
-    if (hasStar("紫微")) {
-        const hasZuoYou = hasStar("左辅") || hasStar("右弼");
-        let content = "紫微为北斗帝星，代表文武官带、正财，能解厄延寿。";
-        if (hasZuoYou) {
-            content += " 命逢紫微且有左辅右弼相会，格局大贵，为人厚道。";
-        } else if (isLifePalace) {
-            content += " 无辅星相助犹如孤君，性情可能较为孤独。";
-        }
-        items.push({ id: "ziwei", type: "star", title: "紫微星", content, level: hasZuoYou ? "success" : "info" });
+    // 1. 检查四化
+    if (hasTrans(palace, "忌")) {
+        items.push({
+            id: `palace_ji_${palace.name}`,
+            type: "transformation",
+            title: `化忌落${palace.name}`,
+            content: `化忌落入${palace.name}，主该领域多有阻碍、是非或执念。倪师云：位可改天命，须调理地理方位来化解先天之格。`,
+            level: "destructive"
+        });
     }
 
-    if (hasStar("天府")) {
+    if (hasTrans(palace, "禄")) {
         items.push({
-            id: "tianfu", type: "star", title: "天府星",
-            content: "南斗君主，代表个性温和、稳重理财。犹如大总管或大地主，不惹是非但遇事不怕。强项在于守成与积累，切忌高风险投机。",
+            id: `palace_lu_${palace.name}`,
+            type: "transformation",
+            title: `化禄落${palace.name}`,
+            content: `化禄落入${palace.name}，主该领域有财禄或顺遂之象。倪师强调：禄存、化禄为解厄之神，见禄则生机显现。`,
             level: "success"
-        });
-    }
-
-    if (hasStar("太阳")) {
-        const isSunTrapped = palace.star_brightness?.["太阳"] === "陷";
-        if (isSunTrapped) {
-            items.push({
-                id: "taiyang_fall", type: "warning", title: "太阳落陷",
-                content: "太阳落陷多主辛苦劳碌，披星戴月。女命逢之尤其代表父、夫、子缘分较薄或聚少离多。需借助后天风水化解。",
-                level: "destructive"
-            });
-        } else {
-            let content = "代表武官带（军警法政），能解厄、发横财。在人物上代表父亲、丈夫、儿子。";
-            if (palace.branch === "午") content += " 太阳在午为【日丽中天】之格，极其壮旺，武职或从商大利！大富大贵。";
-            items.push({ id: "taiyang", type: "star", title: "太阳星", content, level: "success" });
-        }
-    }
-
-    if (hasStar("武曲")) {
-        items.push({
-            id: "wuqu", type: "star", title: "武曲星",
-            content: "大财星、武官星王。个性果决火爆，身材多金水相生（方圆或短壮，属富贵相）。利于财运与执行力。",
-            level: "success"
-        });
-    }
-
-    if (hasStar("天机")) {
-        items.push({
-            id: "tianji", type: "star", title: "天机星",
-            content: "代表文官带（公教人员、银行），也主正财。入命者多精干、反应快、聪明多智虑。",
-            level: "info"
-        });
-    }
-
-    if (hasStar("七杀")) {
-        let content = "将星入命，主目大、性急、多疑，利于武职。代表劳碌与消耗。";
-        if (palace.branch === "午" || palace.branch === "申") content += " 七杀在午申为【七杀朝斗】，将星得地，威震边疆。";
-        items.push({ id: "qisha", type: "star", title: "七杀星", content, level: "info" });
-    }
-
-    if (hasStar("破军")) {
-        let content = "武官星，主破耗、孤僻。不重蝇头小利，破旧立新。";
-        if (palace.branch === "子" || palace.branch === "午") {
-            content += " 破军居子午为【英星入庙】，发武职，男命甚佳。";
-        }
-        items.push({ id: "pojun", type: "star", title: "破军星", content, level: "info" });
-    }
-
-    if (hasStar("贪狼")) {
-        let content = "大桃花星，也主偏财、酒色财气。";
-        if (palace.branch === "亥" || palace.branch === "子") {
-            content += " 贪狼在水宫为【泛水桃花】，异性缘极强。";
-        }
-        if (hasStar("火星") || hasStar("铃星")) {
-            content += " 贪狼遇火铃为【火贪格/铃贪格】，主爆发横财或武贵。";
-        }
-        items.push({ id: "tanlang", type: "star", title: "贪狼星", content, level: "warning" });
-    }
-
-    if (hasStar("廉贞")) {
-        let content = "次桃花，代表清廉也主武官带。";
-        if ((palace.branch === "寅" || palace.branch === "申") && isLifePalace) {
-            content += " 廉贞在寅申为【雄宿朝元】，宜军警或经商当老板，但须防桃花劫。";
-        }
-        items.push({ id: "lianzhen", type: "star", title: "廉贞星", content, level: "info" });
-    }
-
-    if (hasStar("巨门")) {
-        const isJuTrapped = palace.star_brightness?.["巨门"] === "陷";
-        let content = "代表口舌、是非、争执。";
-        if (hasStar("太阳")) {
-            content += " 太阳巨门同宫/相会为【巨日格】，成格者大富（商人巨贾）或名嘴。但落陷则易生暗耗或感情波折。";
-        }
-        if (isJuTrapped) {
-            items.push({ id: "jumen", type: "warning", title: "巨门落陷", content: content + " 巨门落陷多口舌官非或牢狱之灾。", level: "destructive" });
-        } else {
-            items.push({ id: "jumen", type: "star", title: "巨门星", content: content + " 庙旺主口才极佳，宜凭口业生财。", level: "info" });
-        }
-    }
-
-    if (hasStar("太阴")) {
-        const isTaiyinTrapped = palace.star_brightness?.["太阴"] === "陷";
-        if (palace.branch === "亥") {
-            items.push({ id: "taiyin_hai", type: "pattern", title: "月朗天门", content: "太阴在亥宫入庙，为月朗天门格。无论男女皆主富贵，女命极佳，秀丽聪明。", level: "success" });
-        } else if (isTaiyinTrapped) {
-            items.push({ id: "taiyin_trapped", type: "warning", title: "太阴落陷", content: "太阴落陷多主劳心，男命不利妻母缘分。", level: "warning" });
-        } else {
-            items.push({ id: "taiyin", type: "star", title: "太阴星", content: "代表母亲、妻子，主正财与理财，文官带。在子丑亥时最佳。", level: "success" });
-        }
-    }
-
-    // 2. 四化星论断
-    const allTrans = palace.transformations || [];
-    const hasTrans = (t: string) => allTrans.some(x => x.includes(t)) || palace.major_stars.some(s => s.endsWith(t)) || palace.minor_stars.some(s => s.endsWith(t));
-
-    if (hasTrans("科")) {
-        items.push({ id: "huake", type: "transformation", title: "化科", content: "主科名、名气彰显。代表拥有专业技术专长（如医生、律师、教授等），考试科甲极佳。", level: "success" });
-    }
-    if (hasTrans("权")) {
-        items.push({ id: "huaquan", type: "transformation", title: "化权", content: "象征权力、官印，性情刚强果决，具备领导或掌控能力。", level: "success" });
-    }
-    if (hasTrans("禄")) {
-        items.push({ id: "hualu", type: "transformation", title: "化禄", content: "主财禄、守成。有化禄在宫，多为生意人或享受财富，若与权星同宫，必做老板掌财权。", level: "success" });
-    }
-    if (hasTrans("忌")) {
-        items.push({ id: "huaji", type: "transformation", title: "化忌", content: "象征劫杀、想不开、蹇滞、破耗。凡事阻碍较大，常事倍功半或引发纠纷。须戒急用忍，防守为上。", level: "destructive" });
-    }
-
-    // 3. 其它重要辅星/格局
-    if (hasStar("文曲") || hasStar("文昌")) {
-        items.push({ id: "wenchangqu", type: "star", title: "文昌/文曲", content: "主科甲、文才、学术。逢太阴则才华横溢（但也易犯桃花）。在流年多指升学考试或金榜题名。", level: "info" });
-    }
-    if (hasStar("天钺") || hasStar("天魁")) {
-        items.push({ id: "kuiyue", type: "star", title: "天魁/天钺", content: "贵人星，一生多得长辈或提携，亦主科甲、才艺。", level: "success" });
-    }
-    if (hasStar("红鸾") || hasStar("天喜")) {
-        let content = "主桃花、喜庆。在命宫/夫妻早婚，遇煞星也不轻易离异。";
-        if (palace.name === "夫妻宫" || isLifePalace) {
-            content += " 男命必招美妻，女命必得贵夫。";
-        }
-        items.push({ id: "hongluan", type: "star", title: "红鸾/天喜", content, level: "info" });
-    }
-
-    if (items.length === 0) {
-        items.push({
-            id: "empty", type: "info", title: "宫位沉寂",
-            content: "该宫位暂无强烈显象的主星或四化。可结合对宫（迁移/或本对宫）的星曜一同参考判读。",
-            level: "info"
         });
     }
 
@@ -187,140 +49,128 @@ export function analyzePalace(palace: PalaceData, _chart: ZiweiChartData): Analy
 export function analyzeWholeChart(chart: ZiweiChartData): AnalysisItem[] {
     const items: AnalysisItem[] = [];
 
-    const getPalace = (name: string) => chart.palaces.find(p => p.name === name);
-    const lifeP = getPalace("命宫");
-    const wealthP = getPalace("财帛宫");
-    const careerP = getPalace("官禄宫");
-    const travelP = getPalace("迁移宫");
-    const spouseP = getPalace("夫妻宫");
-    const childP = getPalace("子女宫");
-    const parentP = getPalace("父母宫");
+    // 🏮 1. 深度宫位匹配逻辑 (解决官禄/事业、财帛/财库等名称变体)
+    const getPalace = (names: string[]) => chart.palaces.find(p => names.some(n => p.name.includes(n)));
+    
+    const lifeP = getPalace(["命宫"]);
+    const wealthP = getPalace(["财帛", "财库"]);
+    const careerP = getPalace(["官禄", "事业", "工作"]);
+    const travelP = getPalace(["迁移", "出门"]);
+    
+    if (!lifeP) return [{
+        id: "loading", type: "info", title: "命格初始化",
+        content: "正在解析星盘格局...",
+        level: "info"
+    }];
 
-    if (!lifeP || !wealthP || !careerP || !travelP) return items;
+    // 🏮 2. 格局深度识别 (倪师《天纪》核心格局库)
+    const majors = lifeP.major_stars || [];
+    const isShaPoLang = majors.some(s => ["七杀", "破军", "贪狼"].includes(s));
+    const isJiYueTongLiang = majors.some(s => ["天机", "太阴", "天同", "天梁"].includes(s));
+    const hasZiWei = majors.includes("紫微");
 
-    const sanFang = [lifeP, wealthP, careerP, travelP];
+    // 助手函数：检测特定宫位是否有特定星
+    const checkPalaceStar = (pName: string, starName: string) => {
+        const p = chart.palaces.find(px => px.name === pName);
+        return p && (p.major_stars.includes(starName) || p.minor_stars.includes(starName));
+    };
 
-    // Helper routines
-    const getStars = (p: PalaceData) => [...p.major_stars, ...p.minor_stars];
-    const hasTrans = (p: PalaceData, t: string) => (p.transformations || []).some(x => x.includes(t)) || getStars(p).some(s => s.endsWith(t));
-    const hasStar = (p: PalaceData, name: string) => getStars(p).some(s => s.includes(name));
-    const shaStars = ["擎羊", "陀罗", "火星", "铃星", "地空", "地劫"];
-    const countSha = (p: PalaceData) => shaStars.filter(s => hasStar(p, s)).length;
+    // 2.1 日月并明格 (太阳在辰，太阴在戌)
+    const sunInChen = checkPalaceStar("命宫", "太阳") && lifeP.branch === "辰";
+    const moonInXu = chart.palaces.find(p => p.branch === "戌")?.major_stars.includes("太阴");
 
-    // 1. 科权禄 (Ke, Quan, Lu)
-    const sanFangHasKe = sanFang.some(p => hasTrans(p, "科"));
-    const sanFangHasQuan = sanFang.some(p => hasTrans(p, "权"));
-    const sanFangHasLu = sanFang.some(p => hasTrans(p, "禄"));
-    const sanFangHasJi = sanFang.some(p => hasTrans(p, "忌"));
+    // 2.2 日月反背格 (太阳在戌，太阴在辰 - 倪师云：白手起家)
+    const sunInXu = checkPalaceStar("命宫", "太阳") && lifeP.branch === "戌";
+    const moonInChen = chart.palaces.find(p => p.branch === "辰")?.major_stars.includes("太阴");
+
+    // 2.3 石中隐玉 (巨门在子或午)
+    const isShiZhongYinYu = majors.includes("巨门") && (lifeP.branch === "子" || lifeP.branch === "午");
+
+    // 2.4 马头带箭 (擎羊在午宫坐命)
+    const isMaTouDaiJian = lifeP.minor_stars.includes("擎羊") && lifeP.branch === "午";
+
+    // 2.5 月朗天门 (太阴在亥宫坐命)
+    const moonInHai = majors.includes("太阴") && lifeP.branch === "亥";
+
+    // 2.6 巨日同宫 (太阳巨门在寅宫坐命)
+    const juRiInYin = majors.includes("太阳") && majors.includes("巨门") && lifeP.branch === "寅";
+
+    // 2.7 阳梁昌禄 (太阳、天梁、文昌、化禄)
+    const hasYangLiang = majors.includes("太阳") && majors.includes("天梁");
+    const hasChangLu = (lifeP.minor_stars.includes("文昌") || (travelP?.minor_stars || []).includes("文昌")) && 
+                      ((lifeP.transformations || []).some((t: any) => t.type === "lu") || (careerP?.transformations || []).some((t: any) => t.type === "lu"));
+
+    let corePattern: AnalysisItem = {
+        id: "pattern_summary",
+        type: "pattern",
+        title: "先天命格综述",
+        content: `命宫坐${majors.join('、') || '平稳之星'}。倪师断命法则：先看格局，再看四化。此命格中正平和，宜立稳根基，徐图进取。`,
+        level: "info"
+    };
+
+    if (majors.length === 0) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：命无正曜 (借宫而推)", content: "命宫无主星。倪师核心断法：须借对宫迁移宫而论。此格之人一生多变，适应力强，但需注意人生轴心不稳，最宜'位可改命'。", level: "warning" };
+    } else if (isMaTouDaiJian) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：马头带箭 (威镇边疆)", content: "擎羊在午位坐命。倪师断语：非比寻常之格，主异路功名。虽一生惊险重重，但终能威震一方，适合武职或开拓性事业。", level: "success" };
+    } else if (isShiZhongYinYu) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：石中隐玉 (内秀之格)", content: "巨门居子午。倪师云：此类人如石中藏玉，才华不外露，需经磨砺方能显贵。早年辛苦，晚年大发。", level: "success" };
+    } else if (sunInChen && moonInXu) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：日月并明 (光明磊落)", content: "太阳在辰，太阴在戌。倪师推崇：此格之人为人正直、大公无私。格局极高，属于一生近贵之命。", level: "success" };
+    } else if (sunInXu && moonInChen) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：日月反背 (白手起家)", content: "太阳在戌，太阴在辰。倪师云：主劳碌，披星戴月。但若四化得位，反能白手起家，大富大贵，属于辛苦成家之典范。", level: "info" };
+    } else if (moonInHai) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：月朗天门 (富贵清纯)", content: "太阴在亥，明月高悬。倪师云：主大富且极其清高。适合从事学术、文化或政界，人品第一。", level: "success" };
+    } else if (juRiInYin) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：巨日同宫 (名扬四海)", content: "太阳巨门同寅。倪师论断：太阳初升，名声大噪。适合凭借口才或专业知名度立命，先名后利。", level: "success" };
+    } else if (hasYangLiang && hasChangLu) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：阳梁昌禄 (金榜题名)", content: "倪师推崇：阳梁昌禄，古今科考第一格。主聪慧过人，利公职、利科研，功名利禄随才华而至。", level: "success" };
+    } else if (isShaPoLang) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：杀破狼 (开拓变动)", content: "七杀破军贪狼。倪师云：'杀破狼'定终身。主一生波折多、变动多。宜动不宜静，适合独立开创局面。", level: "success" };
+    } else if (isJiYueTongLiang) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格局：机月同梁 (稳健步进)", content: "天机太阴天同天梁。倪师定论：宜在稳定体系内求发展。做事周全细腻，属于大器晚成的稳健之格。", level: "success" };
+    } else if (hasZiWei) {
+        corePattern = { id: "pattern_summary", type: "pattern", title: "格高：君临天下", content: "紫微入命，天生贵气。倪师叮嘱：若见百官朝拱则是顶级之命。需修心养性，避免孤高而无援。", level: "success" };
+    }
+    items.push(corePattern);
+
+    // 🏮 3. 三方四正综合气势评估
+    const sanFang = [lifeP, wealthP, careerP, travelP].filter(Boolean) as PalaceData[];
+    const hasTransGlobal = (p: PalaceData, t: string) => {
+        const trans = p.transformations || [];
+        return trans.some((x: any) => typeof x === 'string' ? x.includes(t) : x.type === t);
+    };
+
+    // 检查科权禄三奇嘉会
+    const sanFangHasKe = sanFang.some(p => hasTransGlobal(p, "ke"));
+    const sanFangHasQuan = sanFang.some(p => hasTransGlobal(p, "quan"));
+    const sanFangHasLu = sanFang.some(p => hasTransGlobal(p, "lu"));
 
     if (sanFangHasKe && sanFangHasQuan && sanFangHasLu) {
-        items.push({ id: "global_kql", type: "pattern", title: "三奇嘉会 (科权禄会命)", content: "算命第一件事先看科权禄。此命盘科权禄在三方四正会照，即“科权禄会命”。不用多算，此局必定是大老板或高级主管，事业版图极大。", level: "success" });
-    } else if (!sanFangHasKe && !sanFangHasQuan && !sanFangHasLu) {
-        items.push({ id: "global_no_kql", type: "info", title: "三方无科权禄", content: "命宫及三方四正（财帛、官禄、迁移）未见科权禄，一辈子相对比较辛苦，需靠自身踏实努力，大器晚成。", level: "info" });
+        items.push({
+            id: "global_kql", type: "transformation", title: "三奇嘉会：极贵之格",
+            content: "倪师断命秘诀：先看科权禄。此命盘三奇嘉会，事业版图极大，必定是独当一面的将领之才。",
+            level: "success"
+        });
     }
 
-    // 2. 命宫主星性格
-    if (hasStar(lifeP, "七杀")) {
-        items.push({ id: "global_life_qisha", type: "star", title: "本命主星：七杀", content: "七杀坐命，个性极强，不服输、做事冲。极度不喜欢被别人管，适合独立开创或武职。", level: "warning" });
-    }
-    if (hasStar(lifeP, "廉贞")) {
-        let content = "廉贞坐命，情绪强烈，非常重感情。";
-        if (hasStar(lifeP, "破军")) content += " 廉贞遇破军同行，人生波动将会非常大。";
-        items.push({ id: "global_life_lianzhen", type: "star", title: "本命主星：廉贞", content, level: "info" });
-    }
-    if (hasStar(lifeP, "武曲")) {
-        items.push({ id: "global_life_wuqu", type: "star", title: "本命主星：武曲", content: "武曲坐命，为人极其现实，非常会赚钱。可以说一辈子都在算钱，对商业和数字有着天生的敏锐度。", level: "success" });
-    }
-    if (hasStar(lifeP, "天机")) {
-        items.push({ id: "global_life_tianji", type: "star", title: "本命主星：天机", content: "天机坐命，天生聪明，思虑极多。但是容易“想太多”而行动力不足，适合充当军师、幕僚之位。", level: "info" });
+    // 🏮 4. 四化重点警示
+    const hasHuaJiInput = (lifeP.transformations || []).some((t: any) => typeof t === 'string' ? t.includes("忌") : t.type === "ji");
+    if (hasHuaJiInput) {
+        items.push({
+            id: "warning_ji", type: "warning", title: "重点警示：化忌压命",
+            content: "命宫见化忌，主一生多波折。倪师化解之道：'位可改命'，须利用地理方位及后天修养来化解。",
+            level: "destructive"
+        });
     }
 
-    // 3. 三方四正煞星评估
-    const totalShaInSanFang = sanFang.reduce((sum, p) => sum + countSha(p), 0);
-
-    if (totalShaInSanFang >= 4) {
-        items.push({ id: "global_sanfang_sha", type: "warning", title: "三方煞星集结", content: "三方四正煞星云集（羊陀火铃空劫），预示人生波动非常大，多成多败，须修心养性，防范意外破耗。", level: "destructive" });
-    }
-
-    // 4. 重大格局
-    // 巨日格
-    if (sanFang.some(p => hasStar(p, "巨门") && hasStar(p, "太阳"))) {
-        const isMale = chart.meta.yin_yang_gender?.includes("男");
-        const content = isMale
-            ? "太阳巨门同宫/相会为【巨日格】。男命主名嘴、巨贾，跨国贸易大富大贵。"
-            : "太阳巨门同宫/相会为【巨日格】。女命若逢此格多为偏房或感情波折（唯遇旺地无煞方解）。";
-        items.push({ id: "global_pattern_juri", type: "pattern", title: "巨日格", content, level: sanFangHasJi ? "warning" : "success" });
-    }
-    // 机月同梁
-    if (sanFang.some(p => hasStar(p, "天机")) && sanFang.some(p => hasStar(p, "太阴")) && sanFang.some(p => hasStar(p, "天同")) && sanFang.some(p => hasStar(p, "天梁"))) {
-        items.push({ id: "global_pattern_jiyue", type: "pattern", title: "机月同梁", content: "天机、太阴、天同、天梁在三方四正完整会照。这是极佳的“公家单位命”或大型企业安稳职员，一生平顺稳当。", level: "success" });
-    }
-    // 武贪格
-    if (sanFang.some(p => hasStar(p, "武曲") && hasStar(p, "贪狼"))) {
-        let content = "武曲贪狼同行/对照。主大财星与桃花、晚发之局。";
-        if (sanFangHasLu) content += " 逢化禄，必定暴发成为巨富！";
-        items.push({ id: "global_pattern_wutan", type: "pattern", title: "武贪格", content, level: "success" });
-    }
-
-    // 5. 事业 (官禄宫)
-    if (hasStar(careerP, "紫微")) {
-        items.push({ id: "global_career_ziwei", type: "star", title: "事业（官禄宫）：展现管理", content: "官禄宫见紫微帝星，天生就是做主管、带团队的管理层人才。", level: "success" });
-    } else if (hasStar(careerP, "巨门")) {
-        items.push({ id: "global_career_jumen", type: "star", title: "事业（官禄宫）：口业生财", content: "官禄宫巨门，事业必须靠口才。最适合当律师、教师、讲师、法官或卓越的销售代表。", level: "info" });
-    } else if (careerP.major_stars.length === 0) {
-        items.push({ id: "global_career_empty", type: "info", title: "事业（官禄宫）：空宫", content: "官禄宫内无主星（空宫），倪海厦常言：“这个人不适合做官。” 亦很难在庞大体制内安稳掌权，建议自由职业或自立门户。", level: "warning" });
-    }
-
-    // 6. 财运 (财帛宫)
-    if (hasStar(wealthP, "廉贞") && hasStar(wealthP, "破军")) {
-        items.push({ id: "global_wealth_lianpo", type: "warning", title: "财运（财帛宫）：不可从商", content: "财帛宫见廉贞破军，极不适合自己做生意，强行创业极易破败。宜凭借专业技能领薪水安稳度日。", level: "destructive" });
-    } else if (hasTrans(wealthP, "禄") || (hasTrans(wealthP, "禄") && (hasStar(wealthP, "武曲") || hasStar(wealthP, "贪狼")))) {
-        items.push({ id: "global_wealth_wulu", type: "star", title: "财运（财帛宫）：财星逢禄", content: "财帛宫逢化禄，或大财星（武曲/贪狼）居其中，极其会赚钱，天生的生意人或投资高手，一辈子不缺钱。", level: "success" });
-    }
-
-    // 7. 婚姻 (夫妻宫)
-    if (spouseP) {
-        if (hasStar(spouseP, "廉贞") && hasStar(spouseP, "破军")) {
-            items.push({ id: "global_spouse_lianpo", type: "warning", title: "婚姻（夫妻宫）：非生离即死别", content: "夫妻宫见廉贞破军，乃感情大凶之象，非生离即是死别。化解之道在于晚婚，或者从事常需与伴侣聚少离多的行业。", level: "destructive" });
-        } else if (hasStar(spouseP, "天府")) {
-            items.push({ id: "global_spouse_tianfu", type: "star", title: "婚姻（夫妻宫）：太太很好", content: "夫妻宫得天府星，主配偶温厚持家。（若为男命）倪海厦常断：“太太极其贤惠，太太很好。”能稳固后方。", level: "success" });
-        } else if (countSha(spouseP) === 1 && spouseP.major_stars.length === 0) { // 单星独守最凶 (尤其是凶星单守)
-            // 修正：单星独守最凶可以是包含主星时，若只有一颗煞星也很凶。
-            const sha = shaStars.find(s => hasStar(spouseP, s));
-            if (sha) {
-                items.push({ id: "global_spouse_sha", type: "warning", title: `婚姻：煞星独守（${sha}）`, content: `倪海厦认为“单星独守最凶”。夫妻宫仅有一颗煞星（如${sha}）独守，婚姻极难稳定，易生感情横祸。`, level: "destructive" });
-            }
-        } else if (hasStar(spouseP, "红鸾") || hasStar(spouseP, "天喜")) {
-            items.push({ id: "global_spouse_peach", type: "star", title: "婚姻（夫妻宫）：桃花满溢", content: "夫妻宫有红鸾或天喜等桃花星，异性缘极佳，很容易结婚，常常是早婚定局。", level: "info" });
-        }
-    }
-
-    // 8. 子女与父母
-    if (childP) {
-        if (hasTrans(childP, "忌") || countSha(childP) > 1) {
-            items.push({ id: "global_child_ji", type: "warning", title: "子女缘薄", content: "子女宫化忌或煞星重，主与子女缘分较薄，或因子女而极度操心劳碌。", level: "warning" });
-        }
-    }
-    if (parentP) {
-        if (hasStar(parentP, "廉贞") && hasStar(parentP, "破军")) {
-            items.push({ id: "global_parent_lianpo", type: "warning", title: "长辈：父母离异", content: "父母宫见廉贞、破军，多预示父母感情不和、或早年父母离异，与自身缘分极为浅薄。", level: "warning" });
-        }
-    }
-
-    // 9. 迁移宫
-    if (travelP) {
-        if (hasTrans(travelP, "禄")) {
-            items.push({ id: "global_travel_lu", type: "star", title: "外地发财", content: "迁移宫（外地运）化禄，出门见大财。最好离开出生地去外地发展、经商，必定大放异彩。", level: "success" });
-        }
-        if (hasStar(travelP, "天马")) {
-            items.push({ id: "global_travel_ma", type: "star", title: "事业驿马", content: "迁移宫逢天马，一生经常需要出差或在异乡奔波，这叫“事业在外”。", level: "info" });
-        }
-    }
-
-    // 兜底：如果全局都没有太多命格
-    if (items.length === 0) {
-        items.push({ id: "global_empty", type: "info", title: "总局平稳", content: "此命格三方四正较为平稳均和，无极端之大起大落现象。人生命运多受大限与流年流转影响，宜多修身养性积累阴德。", level: "info" });
-    }
+    // 🏮 5. 倪师断命要旨总结
+    items.push({
+        id: "master_wisdom",
+        type: "info",
+        title: "倪师断命精要",
+        content: "倪海厦老师曰：命虽有定数，位可改天命。心态定乾坤。凡事先尽人事，再听天命。",
+        level: "info"
+    });
 
     return items;
 }

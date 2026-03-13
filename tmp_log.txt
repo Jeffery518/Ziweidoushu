@@ -1,0 +1,8 @@
+﻿909b341 feat: refine engine, palace scores and nishi knowledge
+aa2734e refactor: 绉婚櫎鏁板€艰瘎鍒嗙郴缁燂紝鍥炲綊鍊笀'璞?瑙?鍒嗘瀽浣撶郴
+146fdef feat: 娣卞害瀵归綈澶╃邯11-21椤甸€昏緫锛屽鍔犱笝绾ф潅鏇溿€佸懡韬富鍙婃槦鏇滄潈閲嶄綋绯?7f35c9f feat: 浼樺寲浜害鏄剧ず涓?绾ф爣鍑嗗苟鍚屾鍛芥牸鍒ゅ畾涓嶢I鐭ヨ瘑搴?1d9c456 feat: Create the main Ziwei Dou Shu chart generation page with user input forms and a production build archive.
+467478c ui: final high-performance static cosmic background to fix mobile artifacts
+91008fc ui: full cosmic rotation with multi-layer starfield and visible planetary orbits
+f8b6253 ui: significantly increase star density and visibility for cosmic background
+cbfc823 ui: enhance starfield with dynamic solar system orbits and central glowing sun
+6c320eb ui: final layout adjustments and adding dynamic cosmic background
